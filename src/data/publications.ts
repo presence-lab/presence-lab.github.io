@@ -1,0 +1,504 @@
+export interface Publication {
+  year: number;
+  title: string;
+  authors: string;
+  venue: string;
+  type: "Journal" | "Conference" | "Workshop" | "Dissertation" | "Editorial";
+}
+
+export const publications: Publication[] = [
+  // ── 2025 ──
+  {
+    year: 2025,
+    title: "Longitudinal Impact of Joystick and Teleportation Locomotion Methods on Spatial Memory in Virtual Reality and Real-World Gait After Exiting Virtual Reality",
+    authors: "M Nasiri, O Nasiry, A Robb",
+    venue: "International Journal of Human\u2013Computer Interaction, 1-22",
+    type: "Journal",
+  },
+  {
+    year: 2025,
+    title: "An Empirical Evaluation of How Virtual Hand Visibility Affects Near-Field Size Perception and Reporting of Tangible Objects in Virtual Reality",
+    authors: "C Murmu, R Venkatakrishnan, R Venkatakrishnan, WC Lin, AC Robb, et al.",
+    venue: "IEEE Transactions on Visualization and Computer Graphics",
+    type: "Journal",
+  },
+  {
+    year: 2025,
+    title: "It Is Only Eco-Logical: Direct Perception for XR Research",
+    authors: "K Kohm, A Robb, SV Babu, C Pagano",
+    venue: "ACM Symposium on Applied Perception 2025, 1-10",
+    type: "Conference",
+  },
+  {
+    year: 2025,
+    title: "Undergraduate Students\u2019 Perceptions of Large Language Models in Higher Education: Self-Perceived Benefits, Reliance, and Accuracy Assessment",
+    authors: "S Zamanifard, S Goudarzi, M Soleimani, A Robb",
+    venue: "",
+    type: "Journal",
+  },
+
+  // ── 2024 ──
+  {
+    year: 2024,
+    title: "The impact of color and object size on spatial cognition and object recognition in virtual reality",
+    authors: "D Diaz, AT Duchowski, M Volonte, A Robb, CC Pagano, SV Babu",
+    venue: "Proceedings of the 17th ACM SIGGRAPH Conference on Motion, Interaction, and Games",
+    type: "Conference",
+  },
+  {
+    year: 2024,
+    title: "Exploring the effects of self-overlapping spaces on distance perception and action judgments",
+    authors: "J Payne, A Robb",
+    venue: "ACM Transactions on Applied Perception 21 (4), 1-14",
+    type: "Journal",
+  },
+  {
+    year: 2024,
+    title: "The Effects of Colored Environmental Surroundings in Virtual Reality",
+    authors: "D Diaz, AC Robb, SV Babu, CC Pagano",
+    venue: "2024 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops",
+    type: "Workshop",
+  },
+  {
+    year: 2024,
+    title: "Investigating the effects of avatarization and interaction techniques on near-field mixed reality interactions with physical components",
+    authors: "R Venkatakrishnan, R Venkatakrishnan, R Canales, B Raveendranath, et al.",
+    venue: "IEEE Transactions on Visualization and Computer Graphics 30 (5), 2756-2766",
+    type: "Journal",
+  },
+  {
+    year: 2024,
+    title: "The effects of secondary task demands on cybersickness in active exploration virtual reality experiences",
+    authors: "R Venkatakrishnan, R Venkatakrishnan, B Raveendranath, R Canales, et al.",
+    venue: "IEEE Transactions on Visualization and Computer Graphics 30 (5), 2745-2755",
+    type: "Journal",
+  },
+  {
+    year: 2024,
+    title: "Pedestrian behavior interacting with autonomous vehicles during unmarked midblock multilane crossings: Role of infrastructure design, AV operations and signaling",
+    authors: "F Zou, J Ogle, W Jin, P Gerard, D Petty, A Robb",
+    venue: "Transportation Research Part F: Traffic Psychology and Behaviour 100, 84-100",
+    type: "Journal",
+  },
+
+  // ── 2023 ──
+  {
+    year: 2023,
+    title: "Changes in navigation over time: A comparison of teleportation and joystick-based locomotion",
+    authors: "M Nasiri, J Porter, K Kohm, A Robb",
+    venue: "ACM Transactions on Applied Perception 20 (4), 1-16",
+    type: "Journal",
+  },
+  {
+    year: 2023,
+    title: "The effects of auditory, visual, and cognitive distractions on cybersickness in virtual reality",
+    authors: "R Venkatakrishnan, R Venkatakrishnan, B Raveendranath, DM Sarno, et al.",
+    venue: "IEEE Transactions on Visualization and Computer Graphics 30 (8), 5350-5369",
+    type: "Journal",
+  },
+  {
+    year: 2023,
+    title: "Social virtual reality is my therapist: overcoming social anxiety disorder through using social virtual reality",
+    authors: "S Zamanifard, A Robb",
+    venue: "Extended Abstracts of the 2023 CHI Conference on Human Factors in Computing Systems",
+    type: "Conference",
+  },
+  {
+    year: 2023,
+    title: "Effect of texture on the perception of axis of rotation of rotating panels",
+    authors: "B Raveendranath, CC Pagano, M Nasiri, AC Robb, SV Babu",
+    venue: "Ecological Psychology 35 (1-2), 1-30",
+    type: "Journal",
+  },
+  {
+    year: 2023,
+    title: "Empirically evaluating the effects of eye height and self-avatars on dynamic passability affordances in virtual reality",
+    authors: "A Bhargava, R Venkatakrishnan, R Venkatakrishnan, H Solini, K Lucaites, et al.",
+    venue: "2023 IEEE Conference Virtual Reality and 3D User Interfaces (VR), 308-317",
+    type: "Conference",
+  },
+  {
+    year: 2023,
+    title: "Pedestrian Behavior Interacting with Autonomous Vehicles: Role of AV Operation and Signal Indication and Roadway Infrastructure",
+    authors: "F Zou, J Ogle, W Jin, P Gerard, D Petty, A Robb",
+    venue: "2023 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops",
+    type: "Workshop",
+  },
+  {
+    year: 2023,
+    title: "How virtual hand representations affect the perceptions of dynamic affordances in virtual reality",
+    authors: "R Venkatakrishnan, R Venkatakrishnan, B Raveendranath, CC Pagano, et al.",
+    venue: "IEEE Transactions on Visualization and Computer Graphics 29 (5), 2258-2268",
+    type: "Journal",
+  },
+  {
+    year: 2023,
+    title: "Give me a hand: Improving the effectiveness of near-field augmented reality interactions by avatarizing users\u2019 end effectors",
+    authors: "R Venkatakrishnan, R Venkatakrishnan, B Raveendranath, CC Pagano, et al.",
+    venue: "IEEE Transactions on Visualization and Computer Graphics 29 (5), 2412-2422",
+    type: "Journal",
+  },
+  {
+    year: 2023,
+    title: "Can I squeeze through? Effects of self-avatars and calibration in a person-plus-virtual-object system on perceived lateral passability in VR",
+    authors: "A Bhargava, R Venkatakrishnan, R Venkatakrishnan, K Lucaites, H Solini, et al.",
+    venue: "IEEE Transactions on Visualization and Computer Graphics 29 (5), 2348-2357",
+    type: "Journal",
+  },
+  {
+    year: 2023,
+    title: "Introduction to the SAP 2023 special issue",
+    authors: "A Chapiro, A Robb",
+    venue: "ACM Transactions on Applied Perception 20 (4), 1-2",
+    type: "Editorial",
+  },
+
+  // ── 2022 ──
+  {
+    year: 2022,
+    title: "Experience matters: Longitudinal changes in sensitivity to rotational gains in virtual reality",
+    authors: "A Robb, K Kohm, J Porter",
+    venue: "ACM Transactions on Applied Perception 19 (4), 1-18",
+    type: "Journal",
+  },
+  {
+    year: 2022,
+    title: "Sensitivity to hand offsets and related behavior in virtual environments over time",
+    authors: "K Kohm, J Porter, A Robb",
+    venue: "ACM Transactions on Applied Perception 19 (4), 1-15",
+    type: "Journal",
+  },
+  {
+    year: 2022,
+    title: "Gait differences in the real world and virtual reality: the effect of prior virtual reality experience",
+    authors: "M Nasiri, RG Anaraky, SV Babu, A Robb",
+    venue: "2022 IEEE International Symposium on Mixed and Augmented Reality (ISMAR)",
+    type: "Conference",
+  },
+  {
+    year: 2022,
+    title: "Lingering effects associated with the consumer use of virtual reality",
+    authors: "J Porter III, A Robb",
+    venue: "Frontiers in Virtual Reality 3, 880634",
+    type: "Journal",
+  },
+  {
+    year: 2022,
+    title: "Objects may be farther than they appear: depth compression diminishes over time with repeated calibration in virtual reality",
+    authors: "K Kohm, SV Babu, C Pagano, A Robb",
+    venue: "IEEE Transactions on Visualization and Computer Graphics 28 (11), 3907-3916",
+    type: "Journal",
+  },
+
+  // ── 2021 ──
+  {
+    year: 2021,
+    title: "Spatial judgments in impossible spaces preserve important relative information",
+    authors: "A Robb, C Barwulor",
+    venue: "ACM Symposium on Applied Perception 2021, 1-9",
+    type: "Conference",
+  },
+  {
+    year: 2021,
+    title: "Stay connected in an immersive world: Why teenagers engage in social virtual reality",
+    authors: "D Maloney, G Freeman, A Robb",
+    venue: "Proceedings of the 20th Annual ACM Interaction Design and Children Conference",
+    type: "Conference",
+  },
+  {
+    year: 2021,
+    title: "Did I hit the door? Effects of self-avatars and calibration in a person-plus-virtual-object system on perceived frontal passability in VR",
+    authors: "A Bhargava, R Venkatakrishnan, R Venkatakrishnan, H Solini, K Lucaites, et al.",
+    venue: "IEEE Transactions on Visualization and Computer Graphics 28 (12), 4198-4210",
+    type: "Journal",
+  },
+  {
+    year: 2021,
+    title: "Empirically evaluating the effects of perceptual information channels on the size perception of tangibles in near-field virtual reality",
+    authors: "AG de Siqueira, R Venkatakrishnan, R Venkatakrishnan, A Bhargava, et al.",
+    venue: "2021 IEEE Virtual Reality and 3D User Interfaces (VR), 1-10",
+    type: "Conference",
+  },
+  {
+    year: 2021,
+    title: "Social virtual reality: ethical considerations and future directions for an emerging research space",
+    authors: "D Maloney, G Freeman, A Robb",
+    venue: "2021 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops",
+    type: "Workshop",
+  },
+
+  // ── 2020 ──
+  {
+    year: 2020,
+    title: "Revisiting affordance perception in contemporary virtual reality",
+    authors: "A Bhargava, KM Lucaites, LS Hartman, H Solini, JW Bertrand, AC Robb, et al.",
+    venue: "Virtual Reality 24 (4), 713-724",
+    type: "Journal",
+  },
+  {
+    year: 2020,
+    title: "A virtual experimenter does not increase placebo hypoalgesia when delivering an interactive expectancy manipulation",
+    authors: "B Horing, SC Beadle, Z Inks, A Robb, ER Muth, SV Babu",
+    venue: "Scientific Reports 10 (1), 20353",
+    type: "Journal",
+  },
+  {
+    year: 2020,
+    title: "A virtual space for all: Exploring children\u2019s experience in social virtual reality",
+    authors: "D Maloney, G Freeman, A Robb",
+    venue: "Proceedings of the Annual Symposium on Computer-Human Interaction in Play",
+    type: "Conference",
+  },
+  {
+    year: 2020,
+    title: "Investigating the effects of display fidelity of popular head-mounted displays on spatial updating and learning in virtual reality",
+    authors: "B Rudolph, G Musick, L Wiitablake, KB Lazar, C Mobley, DM Boyer, et al.",
+    venue: "International Symposium on Visual Computing, 666-679",
+    type: "Conference",
+  },
+  {
+    year: 2020,
+    title: "It is complicated: Interacting with children in social virtual reality",
+    authors: "D Maloney, G Freeman, A Robb",
+    venue: "2020 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops",
+    type: "Workshop",
+  },
+  {
+    year: 2020,
+    title: "Exploring effects of screen-fixed and world-fixed annotation on navigation in virtual reality",
+    authors: "J Dominic, A Robb",
+    venue: "2020 IEEE Conference on Virtual Reality and 3D User Interfaces (VR), 607-615",
+    type: "Conference",
+  },
+  {
+    year: 2020,
+    title: "Comparative evaluation of the effects of motion control on cybersickness in immersive virtual environments",
+    authors: "R Venkatakrishnan, R Venkatakrishnan, A Bhargava, K Lucaites, H Solini, et al.",
+    venue: "2020 IEEE Conference on Virtual Reality and 3D User Interfaces (VR), 672-681",
+    type: "Conference",
+  },
+  {
+    year: 2020,
+    title: "Comparative evaluation of viewing and self-representation on passability affordances to a realistic sliding doorway in real and immersive virtual environments",
+    authors: "A Bhargava, H Solini, K Lucaites, JW Bertrand, A Robb, CC Pagano, et al.",
+    venue: "2020 IEEE Conference on Virtual Reality and 3D User Interfaces (VR), 519-528",
+    type: "Conference",
+  },
+  {
+    year: 2020,
+    title: "Using virtual reality to compare design alternatives using subjective and objective evaluation methods",
+    authors: "D Wingler, A Joseph, S Bayramzadeh, A Robb",
+    venue: "HERD: Health Environments Research & Design Journal 13 (1), 129-144",
+    type: "Journal",
+  },
+
+  // ── 2019 ──
+  {
+    year: 2019,
+    title: "An analysis of longitudinal trends in consumer thoughts on presence and simulator sickness in VR games",
+    authors: "J Porter III, A Robb",
+    venue: "Proceedings of the Annual Symposium on Computer-Human Interaction in Play",
+    type: "Conference",
+  },
+  {
+    year: 2019,
+    title: "Perception of spatial relationships in impossible spaces",
+    authors: "A Robb, C Barwulor",
+    venue: "ACM Symposium on Applied Perception 2019, 1-5",
+    type: "Conference",
+  },
+  {
+    year: 2019,
+    title: "An immersive vehicle-in-the-loop VR platform for evaluating human-to-autonomous vehicle interactions",
+    authors: "V Rastogi, R Merco, M Kaur, A Rayamajhi, M Gavelli, G Papa, P Pisu, et al.",
+    venue: "SAE Technical Paper",
+    type: "Conference",
+  },
+  {
+    year: 2019,
+    title: "Towards an immersive driving simulator to study factors related to cybersickness",
+    authors: "R Venkatakrishnan, A Bhargava, R Venkatakrishnan, KM Lucaites, et al.",
+    venue: "2019 IEEE Conference on Virtual Reality and 3D User Interfaces (VR), 1201-1202",
+    type: "Conference",
+  },
+  {
+    year: 2019,
+    title: "Ethical concerns of the use of virtual avatars in consumer entertainment",
+    authors: "D Maloney, S Rajasabeson, A Moore, J Caldwell, J Archer, A Robb",
+    venue: "2019 IEEE Conference on Virtual Reality and 3D User Interfaces (VR), 1489-1492",
+    type: "Conference",
+  },
+  {
+    year: 2019,
+    title: "An initial investigation into stereotypical influences on implicit racial bias and embodied avatars",
+    authors: "D Maloney, A Robb",
+    venue: "2019 IEEE Conference on Virtual Reality and 3D User Interfaces (VR), 1074-1075",
+    type: "Conference",
+  },
+  {
+    year: 2019,
+    title: "Examining the effects of altered avatars on perception-action in virtual reality",
+    authors: "B Day, E Ebrahimi, LS Hartman, CC Pagano, AC Robb, SV Babu",
+    venue: "Journal of Experimental Psychology: Applied 25 (1), 1",
+    type: "Journal",
+  },
+  {
+    year: 2019,
+    title: "The Effect of Hand Size and Interaction Modality on the Virtual Hand Illusion",
+    authors: "S Lin, A Normoyle, A Adkins, Y Sun, A Robb, Y Ye, M Di Luca, et al.",
+    venue: "IEEE Virtual Reality Conference, 1-9",
+    type: "Conference",
+  },
+
+  // ── 2018 ──
+  {
+    year: 2018,
+    title: "Guidelines on successfully porting non-immersive games to virtual reality: a case study in Minecraft",
+    authors: "J Porter III, M Boyer, A Robb",
+    venue: "Proceedings of the 2018 Annual Symposium on Computer-Human Interaction in Play",
+    type: "Conference",
+  },
+  {
+    year: 2018,
+    title: "Effects of anthropomorphic fidelity of self-avatars on reach boundary estimation in immersive virtual environments",
+    authors: "E Ebrahimi, A Robb, LS Hartman, CC Pagano, SV Babu",
+    venue: "Proceedings of the 15th ACM Symposium on Applied Perception, 1-8",
+    type: "Conference",
+  },
+  {
+    year: 2018,
+    title: "Towards standardization of medical trials using virtual experimenters",
+    authors: "ZJ Inks, M Volonte, S Beadle, B Horing, AC Robb, SV Babu",
+    venue: "2018 IEEE Conference on Virtual Reality and 3D User Interfaces (VR), 585-586",
+    type: "Conference",
+  },
+  {
+    year: 2018,
+    title: "Investigating the effects of anthropomorphic fidelity of self-avatars on near field depth perception in immersive virtual environments",
+    authors: "E Ebrahimi, LS Hartman, A Robb, CC Pagano, SV Babu",
+    venue: "2018 IEEE Conference on Virtual Reality and 3D User Interfaces (VR), 1-8",
+    type: "Conference",
+  },
+  {
+    year: 2018,
+    title: "Empirical evaluation of virtual human conversational and affective animations on visual attention in inter-personal simulations",
+    authors: "M Volonte, A Robb, AT Duchowski, SV Babu",
+    venue: "2018 IEEE Conference on Virtual Reality and 3D User Interfaces (VR), 25-32",
+    type: "Conference",
+  },
+  {
+    year: 2018,
+    title: "Towards revisiting passability judgments in real and immersive virtual environments",
+    authors: "A Bhargava, KM Lucaites, LS Hartman, H Solini, JW Bertrand, AC Robb, et al.",
+    venue: "2018 IEEE Conference on Virtual Reality and 3D User Interfaces (VR), 513-514",
+    type: "Conference",
+  },
+
+  // ── 2016 ──
+  {
+    year: 2016,
+    title: "Training together: how another human trainee\u2019s presence affects behavior during virtual human-based team training",
+    authors: "A Robb, A Kleinsmith, A Cordar, C White, A Wendling, S Lampotang, et al.",
+    venue: "Frontiers in ICT 3, 17",
+    type: "Journal",
+  },
+  {
+    year: 2016,
+    title: "Do variations in agency indirectly affect behavior with others? An analysis of gaze behavior",
+    authors: "A Robb, A Kleinsmith, A Cordar, C White, S Lampotang, A Wendling, et al.",
+    venue: "IEEE Transactions on Visualization and Computer Graphics 22 (4), 1336-1345",
+    type: "Journal",
+  },
+
+  // ── 2015 ──
+  {
+    year: 2015,
+    title: "A comparison of speaking up behavior during conflict with real and virtual humans",
+    authors: "A Robb, C White, A Cordar, A Wendling, S Lampotang, B Lok",
+    venue: "Computers in Human Behavior 52, 12-21",
+    type: "Journal",
+  },
+  {
+    year: 2015,
+    title: "Virtual role-models: using virtual humans to train best communication practices for healthcare teams",
+    authors: "A Cordar, A Robb, A Wendling, S Lampotang, C White, B Lok",
+    venue: "International Conference on Intelligent Virtual Agents, 229-238",
+    type: "Conference",
+  },
+  {
+    year: 2015,
+    title: "Denise: A virtual patient",
+    authors: "A Foster, A Robb, A Cordar, N Chaudhary, D Noseworthy, B Lok",
+    venue: "MedEdPORTAL 11, 10145",
+    type: "Journal",
+  },
+  {
+    year: 2015,
+    title: "Using a critical incident scenario with virtual humans to assess educational needs of nurses in a postanesthesia care unit",
+    authors: "C White, J Chuah, A Robb, B Lok, S Lampotang, D Lizdas, J Martindale, et al.",
+    venue: "Journal of Continuing Education in the Health Professions 35 (3), 158-165",
+    type: "Journal",
+  },
+  {
+    year: 2015,
+    title: "Teaming up with virtual humans: How other people change our perceptions of and behavior with virtual teammates",
+    authors: "A Robb, A Cordar, S Lampotang, C White, A Wendling, B Lok",
+    venue: "IEEE Transactions on Visualization and Computer Graphics 21 (4), 511-519",
+    type: "Journal",
+  },
+  {
+    year: 2015,
+    title: "Mixed-agency teams and their effect on social presence and behavior during high-fidelity medical team training",
+    authors: "A Robb",
+    venue: "University of Florida",
+    type: "Dissertation",
+  },
+
+  // ── 2014 ──
+  {
+    year: 2014,
+    title: "A qualitative evaluation of behavior during conflict with an authoritative virtual human",
+    authors: "A Robb, C White, A Cordar, A Wendling, S Lampotang, B Lok",
+    venue: "International Conference on Intelligent Virtual Agents, 397-409",
+    type: "Conference",
+  },
+  {
+    year: 2014,
+    title: "Mixed-reality humans for team training",
+    authors: "B Lok, JH Chuah, A Robb, A Cordar, S Lampotang, A Wendling, C White",
+    venue: "IEEE Computer Graphics and Applications 34 (3), 72-75",
+    type: "Journal",
+  },
+  {
+    year: 2014,
+    title: "Social presence in mixed agency interactions",
+    authors: "A Robb, B Lok",
+    venue: "2014 IEEE Virtual Reality (VR), 111-112",
+    type: "Conference",
+  },
+
+  // ── 2013 ──
+  {
+    year: 2013,
+    title: "Exploring agent physicality and social presence for medical team training",
+    authors: "JH Chuah, A Robb, C White, A Wendling, S Lampotang, R Kopper, B Lok",
+    venue: "Presence: Teleoperators and Virtual Environments 22 (2), 141-170",
+    type: "Journal",
+  },
+  {
+    year: 2013,
+    title: "Leveraging virtual humans to effectively prepare learners for stressful interpersonal experiences",
+    authors: "A Robb, R Kopper, R Ambani, F Qayyum, D Lind, LM Su, B Lok",
+    venue: "IEEE Transactions on Visualization and Computer Graphics 19 (4), 662-670",
+    type: "Journal",
+  },
+
+  // ── 2012 ──
+  {
+    year: 2012,
+    title: "Increasing agent physicality to raise social presence and elicit realistic behavior",
+    authors: "JH Chuah, A Robb, C White, A Wendling, S Lampotang, R Kopper, B Lok",
+    venue: "2012 IEEE Virtual Reality Workshops (VRW), 19-22",
+    type: "Workshop",
+  },
+];
