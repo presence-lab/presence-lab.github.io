@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import AnimateOnScroll from "@/components/AnimateOnScroll";
 
 export const metadata: Metadata = {
@@ -52,23 +53,35 @@ const members: Person[] = [
   },
 ];
 
-const alumni: { name: string; info: string }[] = [
-  { name: "M. Nasiri", info: "Locomotion methods, spatial memory, and real-world gait after VR" },
-  { name: "K. Kohm", info: "Spatial perception, depth compression, rotational gains, and direct perception for XR" },
-  { name: "C. Murmu", info: "Virtual hand visibility and near-field size perception" },
-  { name: "D. Diaz", info: "Color and environmental surroundings effects on spatial cognition in VR" },
-  { name: "J. Payne", info: "Distance perception and action judgments in self-overlapping spaces" },
-  { name: "R. Venkatakrishnan", info: "Cybersickness, affordances, avatarization, and mixed reality interactions" },
-  { name: "R. Venkatakrishnan", info: "Cybersickness, motion control, and near-field interactions in VR" },
-  { name: "A. Bhargava", info: "Passability affordances, self-avatars, and affordance perception in VR" },
-  { name: "J. Porter III", info: "Lingering VR effects, presence, simulator sickness, and porting games to VR" },
-  { name: "D. Maloney", info: "Social VR, children in virtual spaces, and ethical concerns of virtual avatars" },
-  { name: "B. Raveendranath", info: "Texture perception, affordances, and cybersickness in VR" },
-  { name: "C. Barwulor", info: "Spatial judgments and room size perception in impossible spaces" },
-  { name: "J. Dominic", info: "Navigation and annotation methods in virtual reality" },
+interface Alum {
+  name: string;
+  info: string;
+  role?: string;
+  year?: string;
+  position?: string;
+}
+
+const alumni: Alum[] = [
+  { name: "Kristopher Kohm", role: "PhD, Advisor", info: "Spatial perception, depth compression, rotational gains, and direct perception for XR", year: "August 2024", position: "NASA Ames Research Center, Senior Software Engineer" },
+  { name: "Rohith Venkatakrishnan", role: "PhD, Co-Advisor", info: "Cybersickness, affordances, avatarization, and mixed reality interactions", year: "December 2023", position: "University of Central Florida, Assistant Professor of Computer Science" },
+  { name: "Roshan Venkatakrishnan", role: "PhD, Co-Advisor", info: "Cybersickness, motion control, and near-field interactions in VR", year: "December 2023", position: "University of Central Florida, Assistant Professor of Computer Science" },
+  { name: "Moloud Nasiri", role: "PhD, Advisor", info: "Locomotion methods, spatial memory, and real-world gait after VR", year: "December 2023", position: "Converse University, Assistant Professor of Computer Science" },
+  { name: "Divine Maloney", role: "PhD, Co-Advisor", info: "Social VR, children in virtual spaces, and ethical concerns of virtual avatars", year: "December 2021", position: "Apple, Senior AV/VR Software Engineer" },
+  { name: "John Porter III", role: "PhD, Advisor", info: "Lingering VR effects, presence, simulator sickness, and porting games to VR", year: "May 2021", position: "Morehouse College, Postdoctoral Research Scientist" },
+  { name: "Ayush Bhargava", role: "PhD, Co-Advisor", info: "Passability affordances, self-avatars, and affordance perception in VR", year: "December 2019", position: "Meta, UX Researcher" },
+  { name: "James Dominic", role: "MS", info: "Navigation and annotation methods in virtual reality", year: "May 2019", position: "Spectrum, Principle Data Scientist" },
 ];
 
-function PersonCard({ person, large }: { person: Person; large?: boolean }) {
+const avatarGradients = [
+  "from-[#522D80] to-[#7B52AB]",
+  "from-[#F56600] to-[#E8823A]",
+  "from-[#3D3D3D] to-[#522D80]",
+  "from-[#6B4A9E] to-[#F56600]",
+  "from-[#522D80] to-[#3D3D3D]",
+  "from-[#E8823A] to-[#522D80]",
+];
+
+function PersonCard({ person, large, index = 0 }: { person: Person; large?: boolean; index?: number }) {
   const initials = person.name
     .replace(/\[|\]/g, "")
     .split(" ")
@@ -76,12 +89,14 @@ function PersonCard({ person, large }: { person: Person; large?: boolean }) {
     .join("")
     .slice(0, 2);
 
+  const gradient = avatarGradients[index % avatarGradients.length];
+
   return (
     <div className={`bg-card-bg border border-card-border rounded-lg p-6 card-hover ${large ? "md:p-8" : ""}`}>
       <div className="flex items-start gap-4 mb-4">
-        {/* Placeholder avatar */}
+        {/* Gradient avatar placeholder */}
         <div
-          className={`shrink-0 rounded-md bg-clemson-purple/10 flex items-center justify-center text-clemson-purple font-display font-bold ${
+          className={`shrink-0 rounded-md bg-gradient-to-br ${gradient} flex items-center justify-center text-white font-display font-bold shadow-sm ${
             large ? "w-16 h-16 text-2xl" : "w-12 h-12 text-lg"
           }`}
           aria-hidden="true"
@@ -135,18 +150,22 @@ export default function PeoplePage() {
             and with intelligent conversational agents.
           </p>
         </div>
-        <hr className="accent-rule mx-auto max-w-6xl" />
+        <hr className="accent-rule mx-auto max-w-6xl" aria-hidden="true" />
       </section>
 
       {/* PI Section — two-column layout */}
       <section className="mx-auto max-w-6xl px-6 py-16">
-        <p className="section-label mb-6">Lab Director</p>
+        <h2 className="section-label mb-6">Lab Director</h2>
         <div className="bg-card-bg border border-card-border border-t-2 border-t-clemson-purple/15 rounded-lg p-6 md:p-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="flex flex-col items-start">
-              <div className="w-20 h-20 rounded-md bg-clemson-purple/10 flex items-center justify-center text-clemson-purple font-display font-bold text-3xl mb-4" aria-hidden="true">
-                AR
-              </div>
+              <Image
+                src="/images/people/andrew-robb.jpg"
+                alt="Andrew Robb"
+                width={112}
+                height={112}
+                className="w-28 h-28 rounded-md object-cover shadow-sm mb-4"
+              />
               <h3 className="font-display text-2xl font-bold text-charcoal">
                 {pi.name}
               </h3>
@@ -194,11 +213,11 @@ export default function PeoplePage() {
 
       {/* Current Members */}
       <section className="mx-auto max-w-6xl px-6 pb-20">
-        <p className="section-label mb-6">Current Members</p>
+        <h2 className="section-label mb-6">Current Members</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {members.map((person) => (
+          {members.map((person, i) => (
             <AnimateOnScroll key={person.name}>
-              <PersonCard person={person} />
+              <PersonCard person={person} index={i + 1} />
             </AnimateOnScroll>
           ))}
         </div>
@@ -207,15 +226,29 @@ export default function PeoplePage() {
       {/* Alumni */}
       <section className="bg-charcoal text-cream">
         <div className="mx-auto max-w-6xl px-6 py-16">
-          <p className="section-label !text-clemson-orange-muted mb-6">Alumni & Past Collaborators</p>
+          <h2 className="section-label !text-clemson-orange-muted mb-6">Alumni & Past Collaborators</h2>
           <div className="space-y-4">
             {alumni.map((alum) => (
               <div
                 key={alum.name}
-                className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 py-3 border-b border-charcoal-light last:border-b-0"
+                className="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-4 py-3 border-b border-charcoal-light last:border-b-0"
               >
-                <span className="font-display text-lg font-bold">{alum.name}</span>
-                <span className="font-body text-sm text-cream-dark">{alum.info}</span>
+                <div className="sm:w-56 shrink-0">
+                  <span className="font-display text-lg font-bold">{alum.name}</span>
+                  {(alum.role || alum.year) && (
+                    <p className="font-body text-xs text-slate mt-0.5">
+                      {[alum.role, alum.year].filter(Boolean).join(" \u00B7 ")}
+                    </p>
+                  )}
+                </div>
+                <div className="min-w-0">
+                  <span className="font-body text-sm text-cream-dark">{alum.info}</span>
+                  {alum.position && (
+                    <p className="font-body text-xs text-clemson-orange-muted mt-0.5">
+                      Now: {alum.position}
+                    </p>
+                  )}
+                </div>
               </div>
             ))}
           </div>

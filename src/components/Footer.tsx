@@ -17,18 +17,32 @@ export default function Footer() {
           {/* Lab identity */}
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-7 h-7 rounded-sm bg-clemson-purple flex items-center justify-center">
-                <span className="text-white font-display text-base font-bold leading-none">P</span>
-              </div>
+              <img
+                src="/images/clemson-paw.png"
+                alt=""
+                className="w-7 h-7 brightness-0 invert"
+                aria-hidden="true"
+              />
               <span className="font-display text-lg font-bold tracking-tight">
                 Presence Lab
               </span>
             </div>
-            <p className="font-body text-sm text-cream-dark leading-relaxed max-w-xs">
+            <p className="font-body text-sm text-cream-dark leading-relaxed max-w-xs mb-3">
               Studying spatial perception, cybersickness, avatars, social
               dynamics, and human-agent interaction in virtual environments
               and with conversational AI at Clemson University.
             </p>
+            <nav aria-label="University affiliation" className="font-body text-xs text-cream-dark/70 leading-relaxed">
+              <a href="https://www.clemson.edu/cecas/" className="hover:text-white transition-colors">
+                College of Engineering, Computing and Applied Science
+              </a>
+              {" · "}
+              <a href="https://www.clemson.edu/cecas/departments/computing/" className="hover:text-white transition-colors">
+                School of Computing
+              </a>
+              {" · "}
+              <span>Human-Centered Computing</span>
+            </nav>
           </div>
 
           {/* Quick links */}

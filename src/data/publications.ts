@@ -4,6 +4,8 @@ export interface Publication {
   authors: string;
   venue: string;
   type: "Journal" | "Conference" | "Workshop" | "Dissertation" | "Editorial";
+  link?: string;
+  featured?: boolean;
 }
 
 export const publications: Publication[] = [
@@ -14,6 +16,8 @@ export const publications: Publication[] = [
     authors: "M Nasiri, O Nasiry, A Robb",
     venue: "International Journal of Human\u2013Computer Interaction, 1-22",
     type: "Journal",
+    featured: true,
+    link: "https://doi.org/10.1080/10447318.2025.2589863",
   },
   {
     year: 2025,
@@ -21,6 +25,8 @@ export const publications: Publication[] = [
     authors: "C Murmu, R Venkatakrishnan, R Venkatakrishnan, WC Lin, AC Robb, et al.",
     venue: "IEEE Transactions on Visualization and Computer Graphics",
     type: "Journal",
+    featured: true,
+    link: "https://doi.org/10.1109/TVCG.2025.3616829",
   },
   {
     year: 2025,
@@ -28,6 +34,8 @@ export const publications: Publication[] = [
     authors: "K Kohm, A Robb, SV Babu, C Pagano",
     venue: "ACM Symposium on Applied Perception 2025, 1-10",
     type: "Conference",
+    featured: true,
+    link: "https://doi.org/10.1145/3736702.3744363",
   },
   {
     year: 2025,
@@ -35,6 +43,7 @@ export const publications: Publication[] = [
     authors: "S Zamanifard, S Goudarzi, M Soleimani, A Robb",
     venue: "",
     type: "Journal",
+    link: "https://doi.org/10.21203/rs.3.rs-7059648/v1",
   },
 
   // ── 2024 ──
@@ -44,6 +53,7 @@ export const publications: Publication[] = [
     authors: "D Diaz, AT Duchowski, M Volonte, A Robb, CC Pagano, SV Babu",
     venue: "Proceedings of the 17th ACM SIGGRAPH Conference on Motion, Interaction, and Games",
     type: "Conference",
+    link: "https://doi.org/10.1145/3677388.3696325",
   },
   {
     year: 2024,
@@ -51,6 +61,7 @@ export const publications: Publication[] = [
     authors: "J Payne, A Robb",
     venue: "ACM Transactions on Applied Perception 21 (4), 1-14",
     type: "Journal",
+    link: "https://doi.org/10.1145/3695632",
   },
   {
     year: 2024,
@@ -58,6 +69,7 @@ export const publications: Publication[] = [
     authors: "D Diaz, AC Robb, SV Babu, CC Pagano",
     venue: "2024 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops",
     type: "Workshop",
+    link: "https://doi.org/10.1109/VRW62533.2024.00336",
   },
   {
     year: 2024,
@@ -65,6 +77,7 @@ export const publications: Publication[] = [
     authors: "R Venkatakrishnan, R Venkatakrishnan, R Canales, B Raveendranath, et al.",
     venue: "IEEE Transactions on Visualization and Computer Graphics 30 (5), 2756-2766",
     type: "Journal",
+    link: "https://doi.org/10.1109/TVCG.2024.3372050",
   },
   {
     year: 2024,
@@ -72,6 +85,7 @@ export const publications: Publication[] = [
     authors: "R Venkatakrishnan, R Venkatakrishnan, B Raveendranath, R Canales, et al.",
     venue: "IEEE Transactions on Visualization and Computer Graphics 30 (5), 2745-2755",
     type: "Journal",
+    link: "https://doi.org/10.1109/TVCG.2024.3372080",
   },
   {
     year: 2024,
@@ -79,6 +93,7 @@ export const publications: Publication[] = [
     authors: "F Zou, J Ogle, W Jin, P Gerard, D Petty, A Robb",
     venue: "Transportation Research Part F: Traffic Psychology and Behaviour 100, 84-100",
     type: "Journal",
+    link: "https://doi.org/10.1016/j.trf.2023.11.003",
   },
 
   // ── 2023 ──
@@ -88,6 +103,7 @@ export const publications: Publication[] = [
     authors: "M Nasiri, J Porter, K Kohm, A Robb",
     venue: "ACM Transactions on Applied Perception 20 (4), 1-16",
     type: "Journal",
+    link: "https://doi.org/10.1145/3613902",
   },
   {
     year: 2023,
@@ -95,6 +111,7 @@ export const publications: Publication[] = [
     authors: "R Venkatakrishnan, R Venkatakrishnan, B Raveendranath, DM Sarno, et al.",
     venue: "IEEE Transactions on Visualization and Computer Graphics 30 (8), 5350-5369",
     type: "Journal",
+    link: "https://doi.org/10.1109/TVCG.2023.3293405",
   },
   {
     year: 2023,
@@ -102,6 +119,7 @@ export const publications: Publication[] = [
     authors: "S Zamanifard, A Robb",
     venue: "Extended Abstracts of the 2023 CHI Conference on Human Factors in Computing Systems",
     type: "Conference",
+    link: "https://doi.org/10.1145/3544549.3585888",
   },
   {
     year: 2023,
@@ -109,6 +127,7 @@ export const publications: Publication[] = [
     authors: "B Raveendranath, CC Pagano, M Nasiri, AC Robb, SV Babu",
     venue: "Ecological Psychology 35 (1-2), 1-30",
     type: "Journal",
+    link: "https://doi.org/10.1080/10407413.2022.2147838",
   },
   {
     year: 2023,
@@ -116,6 +135,7 @@ export const publications: Publication[] = [
     authors: "A Bhargava, R Venkatakrishnan, R Venkatakrishnan, H Solini, K Lucaites, et al.",
     venue: "2023 IEEE Conference Virtual Reality and 3D User Interfaces (VR), 308-317",
     type: "Conference",
+    link: "https://doi.org/10.1109/VR55154.2023.00046",
   },
   {
     year: 2023,
@@ -130,6 +150,7 @@ export const publications: Publication[] = [
     authors: "R Venkatakrishnan, R Venkatakrishnan, B Raveendranath, CC Pagano, et al.",
     venue: "IEEE Transactions on Visualization and Computer Graphics 29 (5), 2258-2268",
     type: "Journal",
+    link: "https://doi.org/10.1109/TVCG.2023.3247041",
   },
   {
     year: 2023,
@@ -137,6 +158,7 @@ export const publications: Publication[] = [
     authors: "R Venkatakrishnan, R Venkatakrishnan, B Raveendranath, CC Pagano, et al.",
     venue: "IEEE Transactions on Visualization and Computer Graphics 29 (5), 2412-2422",
     type: "Journal",
+    link: "https://doi.org/10.1109/TVCG.2023.3247105",
   },
   {
     year: 2023,
@@ -144,6 +166,7 @@ export const publications: Publication[] = [
     authors: "A Bhargava, R Venkatakrishnan, R Venkatakrishnan, K Lucaites, H Solini, et al.",
     venue: "IEEE Transactions on Visualization and Computer Graphics 29 (5), 2348-2357",
     type: "Journal",
+    link: "https://doi.org/10.1109/TVCG.2023.3247067",
   },
   {
     year: 2023,
@@ -151,6 +174,7 @@ export const publications: Publication[] = [
     authors: "A Chapiro, A Robb",
     venue: "ACM Transactions on Applied Perception 20 (4), 1-2",
     type: "Editorial",
+    link: "https://doi.org/10.1145/3629977",
   },
 
   // ── 2022 ──
@@ -160,6 +184,7 @@ export const publications: Publication[] = [
     authors: "A Robb, K Kohm, J Porter",
     venue: "ACM Transactions on Applied Perception 19 (4), 1-18",
     type: "Journal",
+    link: "https://doi.org/10.1145/3560818",
   },
   {
     year: 2022,
@@ -167,6 +192,7 @@ export const publications: Publication[] = [
     authors: "K Kohm, J Porter, A Robb",
     venue: "ACM Transactions on Applied Perception 19 (4), 1-15",
     type: "Journal",
+    link: "https://doi.org/10.1145/3561055",
   },
   {
     year: 2022,
@@ -174,6 +200,7 @@ export const publications: Publication[] = [
     authors: "M Nasiri, RG Anaraky, SV Babu, A Robb",
     venue: "2022 IEEE International Symposium on Mixed and Augmented Reality (ISMAR)",
     type: "Conference",
+    link: "https://doi.org/10.1109/ISMAR55827.2022.00080",
   },
   {
     year: 2022,
@@ -181,6 +208,7 @@ export const publications: Publication[] = [
     authors: "J Porter III, A Robb",
     venue: "Frontiers in Virtual Reality 3, 880634",
     type: "Journal",
+    link: "https://doi.org/10.3389/frvir.2022.880634",
   },
   {
     year: 2022,
@@ -188,6 +216,7 @@ export const publications: Publication[] = [
     authors: "K Kohm, SV Babu, C Pagano, A Robb",
     venue: "IEEE Transactions on Visualization and Computer Graphics 28 (11), 3907-3916",
     type: "Journal",
+    link: "https://doi.org/10.1109/TVCG.2022.3203112",
   },
 
   // ── 2021 ──
@@ -197,6 +226,7 @@ export const publications: Publication[] = [
     authors: "A Robb, C Barwulor",
     venue: "ACM Symposium on Applied Perception 2021, 1-9",
     type: "Conference",
+    link: "https://doi.org/10.1145/3474451.3476231",
   },
   {
     year: 2021,
@@ -204,6 +234,7 @@ export const publications: Publication[] = [
     authors: "D Maloney, G Freeman, A Robb",
     venue: "Proceedings of the 20th Annual ACM Interaction Design and Children Conference",
     type: "Conference",
+    link: "https://doi.org/10.1145/3459990.3460703",
   },
   {
     year: 2021,
@@ -211,6 +242,7 @@ export const publications: Publication[] = [
     authors: "A Bhargava, R Venkatakrishnan, R Venkatakrishnan, H Solini, K Lucaites, et al.",
     venue: "IEEE Transactions on Visualization and Computer Graphics 28 (12), 4198-4210",
     type: "Journal",
+    link: "https://doi.org/10.1109/TVCG.2021.3083423",
   },
   {
     year: 2021,
@@ -218,6 +250,7 @@ export const publications: Publication[] = [
     authors: "AG de Siqueira, R Venkatakrishnan, R Venkatakrishnan, A Bhargava, et al.",
     venue: "2021 IEEE Virtual Reality and 3D User Interfaces (VR), 1-10",
     type: "Conference",
+    link: "https://doi.org/10.1109/VR50410.2021.00086",
   },
   {
     year: 2021,
@@ -225,6 +258,7 @@ export const publications: Publication[] = [
     authors: "D Maloney, G Freeman, A Robb",
     venue: "2021 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops",
     type: "Workshop",
+    link: "https://doi.org/10.1109/VRW52623.2021.00056",
   },
 
   // ── 2020 ──
@@ -234,6 +268,7 @@ export const publications: Publication[] = [
     authors: "A Bhargava, KM Lucaites, LS Hartman, H Solini, JW Bertrand, AC Robb, et al.",
     venue: "Virtual Reality 24 (4), 713-724",
     type: "Journal",
+    link: "https://doi.org/10.1007/s10055-020-00432-y",
   },
   {
     year: 2020,
@@ -241,6 +276,7 @@ export const publications: Publication[] = [
     authors: "B Horing, SC Beadle, Z Inks, A Robb, ER Muth, SV Babu",
     venue: "Scientific Reports 10 (1), 20353",
     type: "Journal",
+    link: "https://doi.org/10.1038/s41598-020-77453-9",
   },
   {
     year: 2020,
@@ -248,6 +284,7 @@ export const publications: Publication[] = [
     authors: "D Maloney, G Freeman, A Robb",
     venue: "Proceedings of the Annual Symposium on Computer-Human Interaction in Play",
     type: "Conference",
+    link: "https://doi.org/10.1145/3410404.3414268",
   },
   {
     year: 2020,
@@ -255,6 +292,7 @@ export const publications: Publication[] = [
     authors: "B Rudolph, G Musick, L Wiitablake, KB Lazar, C Mobley, DM Boyer, et al.",
     venue: "International Symposium on Visual Computing, 666-679",
     type: "Conference",
+    link: "https://doi.org/10.1007/978-3-030-64556-4_52",
   },
   {
     year: 2020,
@@ -262,6 +300,7 @@ export const publications: Publication[] = [
     authors: "D Maloney, G Freeman, A Robb",
     venue: "2020 IEEE Conference on Virtual Reality and 3D User Interfaces Abstracts and Workshops",
     type: "Workshop",
+    link: "https://doi.org/10.1109/VRW50115.2020.00075",
   },
   {
     year: 2020,
@@ -269,6 +308,7 @@ export const publications: Publication[] = [
     authors: "J Dominic, A Robb",
     venue: "2020 IEEE Conference on Virtual Reality and 3D User Interfaces (VR), 607-615",
     type: "Conference",
+    link: "https://doi.org/10.1109/VR46266.2020.00083",
   },
   {
     year: 2020,
@@ -276,6 +316,7 @@ export const publications: Publication[] = [
     authors: "R Venkatakrishnan, R Venkatakrishnan, A Bhargava, K Lucaites, H Solini, et al.",
     venue: "2020 IEEE Conference on Virtual Reality and 3D User Interfaces (VR), 672-681",
     type: "Conference",
+    link: "https://doi.org/10.1109/VR46266.2020.00090",
   },
   {
     year: 2020,
@@ -283,6 +324,7 @@ export const publications: Publication[] = [
     authors: "A Bhargava, H Solini, K Lucaites, JW Bertrand, A Robb, CC Pagano, et al.",
     venue: "2020 IEEE Conference on Virtual Reality and 3D User Interfaces (VR), 519-528",
     type: "Conference",
+    link: "https://doi.org/10.1109/VR46266.2020.00073",
   },
   {
     year: 2020,
@@ -290,6 +332,7 @@ export const publications: Publication[] = [
     authors: "D Wingler, A Joseph, S Bayramzadeh, A Robb",
     venue: "HERD: Health Environments Research & Design Journal 13 (1), 129-144",
     type: "Journal",
+    link: "https://doi.org/10.1177/1937586719851266",
   },
 
   // ── 2019 ──
@@ -299,6 +342,7 @@ export const publications: Publication[] = [
     authors: "J Porter III, A Robb",
     venue: "Proceedings of the Annual Symposium on Computer-Human Interaction in Play",
     type: "Conference",
+    link: "https://doi.org/10.1145/3311350.3347159",
   },
   {
     year: 2019,
@@ -306,6 +350,7 @@ export const publications: Publication[] = [
     authors: "A Robb, C Barwulor",
     venue: "ACM Symposium on Applied Perception 2019, 1-5",
     type: "Conference",
+    link: "https://doi.org/10.1145/3343036.3343126",
   },
   {
     year: 2019,
@@ -313,6 +358,7 @@ export const publications: Publication[] = [
     authors: "V Rastogi, R Merco, M Kaur, A Rayamajhi, M Gavelli, G Papa, P Pisu, et al.",
     venue: "SAE Technical Paper",
     type: "Conference",
+    link: "https://doi.org/10.4271/2019-01-0143",
   },
   {
     year: 2019,
@@ -320,6 +366,7 @@ export const publications: Publication[] = [
     authors: "R Venkatakrishnan, A Bhargava, R Venkatakrishnan, KM Lucaites, et al.",
     venue: "2019 IEEE Conference on Virtual Reality and 3D User Interfaces (VR), 1201-1202",
     type: "Conference",
+    link: "https://doi.org/10.1109/VR.2019.8797728",
   },
   {
     year: 2019,
@@ -327,6 +374,7 @@ export const publications: Publication[] = [
     authors: "D Maloney, S Rajasabeson, A Moore, J Caldwell, J Archer, A Robb",
     venue: "2019 IEEE Conference on Virtual Reality and 3D User Interfaces (VR), 1489-1492",
     type: "Conference",
+    link: "https://doi.org/10.1109/VR.2019.8797926",
   },
   {
     year: 2019,
@@ -334,6 +382,7 @@ export const publications: Publication[] = [
     authors: "D Maloney, A Robb",
     venue: "2019 IEEE Conference on Virtual Reality and 3D User Interfaces (VR), 1074-1075",
     type: "Conference",
+    link: "https://doi.org/10.1109/VR.2019.8798122",
   },
   {
     year: 2019,
@@ -341,6 +390,7 @@ export const publications: Publication[] = [
     authors: "B Day, E Ebrahimi, LS Hartman, CC Pagano, AC Robb, SV Babu",
     venue: "Journal of Experimental Psychology: Applied 25 (1), 1",
     type: "Journal",
+    link: "https://doi.org/10.1037/xap0000192",
   },
   {
     year: 2019,
@@ -348,6 +398,7 @@ export const publications: Publication[] = [
     authors: "S Lin, A Normoyle, A Adkins, Y Sun, A Robb, Y Ye, M Di Luca, et al.",
     venue: "IEEE Virtual Reality Conference, 1-9",
     type: "Conference",
+    link: "https://doi.org/10.1109/VR.2019.8797787",
   },
 
   // ── 2018 ──
@@ -357,6 +408,7 @@ export const publications: Publication[] = [
     authors: "J Porter III, M Boyer, A Robb",
     venue: "Proceedings of the 2018 Annual Symposium on Computer-Human Interaction in Play",
     type: "Conference",
+    link: "https://doi.org/10.1145/3242671.3242677",
   },
   {
     year: 2018,
@@ -364,6 +416,7 @@ export const publications: Publication[] = [
     authors: "E Ebrahimi, A Robb, LS Hartman, CC Pagano, SV Babu",
     venue: "Proceedings of the 15th ACM Symposium on Applied Perception, 1-8",
     type: "Conference",
+    link: "https://doi.org/10.1145/3225153.3225170",
   },
   {
     year: 2018,
@@ -371,6 +424,7 @@ export const publications: Publication[] = [
     authors: "ZJ Inks, M Volonte, S Beadle, B Horing, AC Robb, SV Babu",
     venue: "2018 IEEE Conference on Virtual Reality and 3D User Interfaces (VR), 585-586",
     type: "Conference",
+    link: "https://doi.org/10.1109/VR.2018.8446502",
   },
   {
     year: 2018,
@@ -378,6 +432,7 @@ export const publications: Publication[] = [
     authors: "E Ebrahimi, LS Hartman, A Robb, CC Pagano, SV Babu",
     venue: "2018 IEEE Conference on Virtual Reality and 3D User Interfaces (VR), 1-8",
     type: "Conference",
+    link: "https://doi.org/10.1109/VR.2018.8446539",
   },
   {
     year: 2018,
@@ -385,6 +440,7 @@ export const publications: Publication[] = [
     authors: "M Volonte, A Robb, AT Duchowski, SV Babu",
     venue: "2018 IEEE Conference on Virtual Reality and 3D User Interfaces (VR), 25-32",
     type: "Conference",
+    link: "https://doi.org/10.1109/VR.2018.8446364",
   },
   {
     year: 2018,
@@ -392,6 +448,7 @@ export const publications: Publication[] = [
     authors: "A Bhargava, KM Lucaites, LS Hartman, H Solini, JW Bertrand, AC Robb, et al.",
     venue: "2018 IEEE Conference on Virtual Reality and 3D User Interfaces (VR), 513-514",
     type: "Conference",
+    link: "https://doi.org/10.1109/VR.2018.8446189",
   },
 
   // ── 2016 ──
@@ -401,6 +458,7 @@ export const publications: Publication[] = [
     authors: "A Robb, A Kleinsmith, A Cordar, C White, A Wendling, S Lampotang, et al.",
     venue: "Frontiers in ICT 3, 17",
     type: "Journal",
+    link: "https://doi.org/10.3389/fict.2016.00017",
   },
   {
     year: 2016,
@@ -408,6 +466,7 @@ export const publications: Publication[] = [
     authors: "A Robb, A Kleinsmith, A Cordar, C White, S Lampotang, A Wendling, et al.",
     venue: "IEEE Transactions on Visualization and Computer Graphics 22 (4), 1336-1345",
     type: "Journal",
+    link: "https://doi.org/10.1109/TVCG.2016.2518405",
   },
 
   // ── 2015 ──
@@ -417,6 +476,7 @@ export const publications: Publication[] = [
     authors: "A Robb, C White, A Cordar, A Wendling, S Lampotang, B Lok",
     venue: "Computers in Human Behavior 52, 12-21",
     type: "Journal",
+    link: "https://doi.org/10.1016/j.chb.2015.05.043",
   },
   {
     year: 2015,
@@ -424,6 +484,7 @@ export const publications: Publication[] = [
     authors: "A Cordar, A Robb, A Wendling, S Lampotang, C White, B Lok",
     venue: "International Conference on Intelligent Virtual Agents, 229-238",
     type: "Conference",
+    link: "https://doi.org/10.1007/978-3-319-21996-7_23",
   },
   {
     year: 2015,
@@ -431,6 +492,7 @@ export const publications: Publication[] = [
     authors: "A Foster, A Robb, A Cordar, N Chaudhary, D Noseworthy, B Lok",
     venue: "MedEdPORTAL 11, 10145",
     type: "Journal",
+    link: "https://doi.org/10.15766/mep_2374-8265.10145",
   },
   {
     year: 2015,
@@ -438,6 +500,7 @@ export const publications: Publication[] = [
     authors: "C White, J Chuah, A Robb, B Lok, S Lampotang, D Lizdas, J Martindale, et al.",
     venue: "Journal of Continuing Education in the Health Professions 35 (3), 158-165",
     type: "Journal",
+    link: "https://doi.org/10.1002/chp.21302",
   },
   {
     year: 2015,
@@ -445,6 +508,7 @@ export const publications: Publication[] = [
     authors: "A Robb, A Cordar, S Lampotang, C White, A Wendling, B Lok",
     venue: "IEEE Transactions on Visualization and Computer Graphics 21 (4), 511-519",
     type: "Journal",
+    link: "https://doi.org/10.1109/TVCG.2015.2391855",
   },
   {
     year: 2015,
@@ -461,6 +525,7 @@ export const publications: Publication[] = [
     authors: "A Robb, C White, A Cordar, A Wendling, S Lampotang, B Lok",
     venue: "International Conference on Intelligent Virtual Agents, 397-409",
     type: "Conference",
+    link: "https://doi.org/10.1007/978-3-319-09767-1_51",
   },
   {
     year: 2014,
@@ -468,6 +533,7 @@ export const publications: Publication[] = [
     authors: "B Lok, JH Chuah, A Robb, A Cordar, S Lampotang, A Wendling, C White",
     venue: "IEEE Computer Graphics and Applications 34 (3), 72-75",
     type: "Journal",
+    link: "https://doi.org/10.1109/MCG.2014.57",
   },
   {
     year: 2014,
@@ -475,6 +541,7 @@ export const publications: Publication[] = [
     authors: "A Robb, B Lok",
     venue: "2014 IEEE Virtual Reality (VR), 111-112",
     type: "Conference",
+    link: "https://doi.org/10.1109/VR.2014.6802076",
   },
 
   // ── 2013 ──
@@ -484,6 +551,7 @@ export const publications: Publication[] = [
     authors: "JH Chuah, A Robb, C White, A Wendling, S Lampotang, R Kopper, B Lok",
     venue: "Presence: Teleoperators and Virtual Environments 22 (2), 141-170",
     type: "Journal",
+    link: "https://doi.org/10.1162/PRES_a_00145",
   },
   {
     year: 2013,
@@ -491,6 +559,7 @@ export const publications: Publication[] = [
     authors: "A Robb, R Kopper, R Ambani, F Qayyum, D Lind, LM Su, B Lok",
     venue: "IEEE Transactions on Visualization and Computer Graphics 19 (4), 662-670",
     type: "Journal",
+    link: "https://doi.org/10.1109/TVCG.2013.35",
   },
 
   // ── 2012 ──
@@ -500,5 +569,6 @@ export const publications: Publication[] = [
     authors: "JH Chuah, A Robb, C White, A Wendling, S Lampotang, R Kopper, B Lok",
     venue: "2012 IEEE Virtual Reality Workshops (VRW), 19-22",
     type: "Workshop",
+    link: "https://doi.org/10.1109/VR.2012.6180871",
   },
 ];

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -44,17 +45,31 @@ export default function ContactPage() {
       <section className="relative overflow-hidden">
         <div className="dot-grid absolute inset-0 opacity-40" aria-hidden="true" />
         <div className="relative mx-auto max-w-6xl px-6 pt-16 pb-12">
-          <p className="section-label mb-5">Get Involved</p>
-          <h1 className="font-display text-5xl md:text-6xl font-bold text-charcoal tracking-tight mb-4">
-            Contact & Join
-          </h1>
-          <p className="font-body text-lg text-charcoal-light max-w-xl leading-relaxed">
-            Interested in our research on virtual reality, conversational AI,
-            perception, and human-computer interaction? We welcome inquiries
-            from prospective students, collaborators, and visitors.
-          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+            <div>
+              <p className="section-label mb-5">Get Involved</p>
+              <h1 className="font-display text-5xl md:text-6xl font-bold text-charcoal tracking-tight mb-4">
+                Contact & Join
+              </h1>
+              <p className="font-body text-lg text-charcoal-light leading-relaxed">
+                Interested in our research on virtual reality, conversational AI,
+                perception, and human-computer interaction? We welcome inquiries
+                from prospective students, collaborators, and visitors.
+              </p>
+            </div>
+            <div className="relative aspect-[4/3] rounded-lg overflow-hidden shadow-md">
+              <Image
+                src="/images/mcadams-hall.png"
+                alt="McAdams Hall, Clemson University School of Computing"
+                fill
+                className="object-cover object-center"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                priority
+              />
+            </div>
+          </div>
         </div>
-        <hr className="accent-rule mx-auto max-w-6xl" />
+        <hr className="accent-rule mx-auto max-w-6xl" aria-hidden="true" />
       </section>
 
       {/* Contact Info */}
@@ -64,7 +79,7 @@ export default function ContactPage() {
             {
               label: "Email",
               icon: (
-                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
                   <rect x="2" y="4" width="18" height="14" rx="2" />
                   <path d="M2 6l9 6 9-6" />
                 </svg>
@@ -81,7 +96,7 @@ export default function ContactPage() {
             {
               label: "Location",
               icon: (
-                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
                   <path d="M11 2C7.13 2 4 5.13 4 9c0 5.25 7 11 7 11s7-5.75 7-11c0-3.87-3.13-7-7-7z" />
                   <circle cx="11" cy="9" r="2.5" />
                 </svg>
@@ -97,7 +112,7 @@ export default function ContactPage() {
             {
               label: "Office Hours",
               icon: (
-                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
                   <circle cx="11" cy="11" r="9" />
                   <path d="M11 6v5l3 3" />
                 </svg>

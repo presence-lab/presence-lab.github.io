@@ -74,7 +74,7 @@ export default function PublicationsPage() {
             ))}
           </div>
         </div>
-        <hr className="accent-rule mx-auto max-w-6xl" />
+        <hr className="accent-rule mx-auto max-w-6xl" aria-hidden="true" />
       </section>
 
       {/* Legend */}
@@ -100,10 +100,11 @@ export default function PublicationsPage() {
         {years.map((year) => (
           <div key={year} className="mb-14 last:mb-0">
             <div className="flex items-center gap-4 mb-6">
-              <h2 className="font-display text-4xl font-bold text-clemson-purple/20 select-none">
+              <h2 className="sr-only">{year}</h2>
+              <span className="font-display text-4xl font-bold text-clemson-purple/20" aria-hidden="true">
                 {year}
-              </h2>
-              <hr className="flex-1 border-card-border" />
+              </span>
+              <hr className="flex-1 border-card-border" aria-hidden="true" />
               <span className="font-body text-xs text-slate">
                 {publications.filter((p) => p.year === year).length} paper
                 {publications.filter((p) => p.year === year).length !== 1
@@ -136,6 +137,20 @@ export default function PublicationsPage() {
                             <p className="font-body text-sm italic text-slate mt-0.5">
                               {pub.venue}
                             </p>
+                          )}
+                          {pub.link && (
+                            <a
+                              href={pub.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 font-body text-sm font-medium text-clemson-purple hover:text-clemson-purple-light transition-colors mt-1"
+                            >
+                              View paper
+                              <svg className="external-link-icon" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+                                <path d="M3.5 1.5h7v7M10.5 1.5L1.5 10.5" />
+                              </svg>
+                              <span className="sr-only"> (opens in a new tab)</span>
+                            </a>
                           )}
                         </div>
                       </div>

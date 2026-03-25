@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import AnimateOnScroll from "@/components/AnimateOnScroll";
 
@@ -198,18 +199,32 @@ export default function ResearchPage() {
       <section className="relative overflow-hidden">
         <div className="dot-grid absolute inset-0 opacity-40" aria-hidden="true" />
         <div className="relative mx-auto max-w-6xl px-6 pt-16 pb-12">
-          <p className="section-label mb-5">Our Work</p>
-          <h1 className="font-display text-5xl md:text-6xl font-bold text-charcoal tracking-tight mb-4">
-            Research
-          </h1>
-          <p className="font-body text-lg text-charcoal-light max-w-xl leading-relaxed">
-            Our research bridges computer science, psychology, and human factors
-            to understand how people perceive and act in virtual, augmented, and
-            mixed reality environments &mdash; and how they communicate with and
-            relate to intelligent conversational agents.
-          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+            <div>
+              <p className="section-label mb-5">Our Work</p>
+              <h1 className="font-display text-5xl md:text-6xl font-bold text-charcoal tracking-tight mb-4">
+                Research
+              </h1>
+              <p className="font-body text-lg text-charcoal-light leading-relaxed">
+                Our research bridges computer science, psychology, and human factors
+                to understand how people perceive and act in virtual, augmented, and
+                mixed reality environments &mdash; and how they communicate with and
+                relate to intelligent conversational agents.
+              </p>
+            </div>
+            <div className="relative aspect-[4/3] rounded-lg overflow-hidden shadow-md">
+              <Image
+                src="/images/research/vr-user.png"
+                alt="Researcher using a VR headset and controllers in the Presence Lab"
+                fill
+                className="object-cover object-center"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                priority
+              />
+            </div>
+          </div>
         </div>
-        <hr className="accent-rule mx-auto max-w-6xl" />
+        <hr className="accent-rule mx-auto max-w-6xl" aria-hidden="true" />
       </section>
 
       {/* Research Areas */}
@@ -223,7 +238,7 @@ export default function ResearchPage() {
                 }`}
               >
                 <div className="lg:col-span-2 relative">
-                  <span className="font-display text-4xl lg:text-6xl font-bold text-clemson-purple/15 leading-none select-none" aria-hidden="true">
+                  <span className="font-display text-4xl lg:text-6xl font-bold text-clemson-purple/15 leading-none" aria-hidden="true">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <h2 className="font-display text-2xl md:text-3xl font-bold text-charcoal tracking-tight mt-2">

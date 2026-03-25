@@ -1,5 +1,6 @@
 import Link from "next/link";
 import AnimateOnScroll from "@/components/AnimateOnScroll";
+import HeroConstellation from "@/components/HeroConstellation";
 import { publications } from "@/data/publications";
 
 const researchHighlights = [
@@ -8,7 +9,7 @@ const researchHighlights = [
     description:
       "How do people judge distances, passability, and object sizes in virtual environments? We study depth compression, impossible spaces, and how self-avatars shape affordance perception.",
     icon: (
-      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
         <circle cx="14" cy="14" r="10" />
         <circle cx="14" cy="14" r="4" />
         <circle cx="14" cy="14" r="1" fill="currentColor" />
@@ -20,7 +21,7 @@ const researchHighlights = [
     description:
       "What causes discomfort in VR, and how does locomotion method affect spatial memory and real-world gait? We investigate the longitudinal effects of immersive technology use.",
     icon: (
-      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
         <rect x="3" y="8" width="22" height="13" rx="3" />
         <path d="M8 8V6a6 6 0 0 1 12 0v2" />
         <circle cx="10.5" cy="14.5" r="2" />
@@ -33,7 +34,7 @@ const researchHighlights = [
     description:
       "How do people connect, interact, and build community in shared virtual spaces? We explore the social dynamics of VR for teenagers, children, and adults, including ethical considerations.",
     icon: (
-      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
         <circle cx="10" cy="10" r="4" />
         <circle cx="19" cy="12" r="3" />
         <path d="M3 22c0-4 3-7 7-7s7 3 7 7" />
@@ -46,7 +47,7 @@ const researchHighlights = [
     description:
       "How do people perceive, trust, and interact with LLM-powered conversational agents? We study human-agent communication across text, voice, and embodied virtual representations.",
     icon: (
-      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
         <rect x="3" y="5" width="22" height="16" rx="3" />
         <path d="M8 13h6" />
         <path d="M8 17h10" />
@@ -56,24 +57,7 @@ const researchHighlights = [
   },
 ];
 
-const newsItems = [
-  {
-    text: "New paper in IEEE TVCG on how virtual hand visibility affects near-field size perception of tangible objects.",
-    tag: "IEEE TVCG 2025",
-  },
-  {
-    text: "Paper on direct perception approaches for XR research presented at ACM Symposium on Applied Perception.",
-    tag: "ACM SAP 2025",
-  },
-  {
-    text: "Study on joystick vs. teleportation locomotion effects on spatial memory and post-VR gait published in IJHCI.",
-    tag: "IJHCI 2025",
-  },
-];
-
-const totalPubs = publications.length;
-const journalCount = publications.filter((p) => p.type === "Journal").length;
-const yearRange = `${Math.min(...publications.map((p) => p.year))}\u2013present`;
+const featuredPubs = publications.filter((p) => p.featured);
 
 export default function Home() {
   return (
@@ -81,16 +65,19 @@ export default function Home() {
       {/* ── Hero ── */}
       <section className="relative overflow-hidden">
         <div className="dot-grid absolute inset-0 opacity-70" aria-hidden="true" />
-        <div className="relative mx-auto max-w-6xl px-6 pt-20 pb-24 md:pt-32 md:pb-32">
+        <div className="hidden lg:block absolute right-0 top-0 w-[55%] h-full">
+          <HeroConstellation />
+        </div>
+        <div className="relative mx-auto max-w-6xl px-6 pt-16 pb-12 md:pt-24 md:pb-20">
           <div className="max-w-3xl">
             <p className="section-label mb-5 animate-fade-in-up stagger-1">
-              Clemson University Research Lab
+              <a href="https://www.clemson.edu" className="hover:text-clemson-orange transition-colors">Clemson University</a> Research Lab
             </p>
             <h1 className="font-display text-5xl md:text-7xl font-bold text-charcoal leading-[1.1] tracking-tight mb-6 animate-fade-in-up stagger-2">
-              Understanding
-              <span className="block text-clemson-purple">Presence</span>
+              Virtual Encounters,
+              <span className="block text-clemson-regalia">Real Experiences</span>
             </h1>
-            <p className="font-body text-lg md:text-xl text-charcoal-light leading-relaxed max-w-xl mb-8 animate-fade-in-up stagger-3">
+            <p className="font-body text-lg md:text-xl text-charcoal-light leading-relaxed max-w-xl mb-6 animate-fade-in-up stagger-3">
               We investigate how people perceive, interact with, and relate to
               virtual environments and intelligent agents &mdash; from spatial
               cognition in XR to trust, communication, and social dynamics with
@@ -111,43 +98,20 @@ export default function Home() {
               </Link>
             </div>
           </div>
-
-          {/* Decorative geometric element */}
-          <div className="hidden lg:block absolute right-12 top-24 w-72 h-72 opacity-[0.07]" aria-hidden="true">
-            <svg viewBox="0 0 200 200" fill="none">
-              <circle cx="100" cy="100" r="90" stroke="#522D80" strokeWidth="0.5" />
-              <circle cx="100" cy="100" r="60" stroke="#522D80" strokeWidth="0.5" />
-              <circle cx="100" cy="100" r="30" stroke="#522D80" strokeWidth="0.5" />
-              <line x1="10" y1="100" x2="190" y2="100" stroke="#522D80" strokeWidth="0.5" />
-              <line x1="100" y1="10" x2="100" y2="190" stroke="#522D80" strokeWidth="0.5" />
-              {[0, 45, 90, 135, 180, 225, 270, 315].map((angle) => {
-                const rad = (angle * Math.PI) / 180;
-                return (
-                  <circle
-                    key={angle}
-                    cx={100 + 90 * Math.cos(rad)}
-                    cy={100 + 90 * Math.sin(rad)}
-                    r="3"
-                    fill="#522D80"
-                  />
-                );
-              })}
-            </svg>
-          </div>
         </div>
-        <hr className="accent-rule mx-auto max-w-6xl" />
+        <hr className="accent-rule mx-auto max-w-6xl" aria-hidden="true" />
       </section>
 
       {/* ── Research Highlights ── */}
-      <section className="mx-auto max-w-6xl px-6 py-24">
-        <p className="section-label mb-5">What We Study</p>
-        <h2 className="font-display text-2xl md:text-3xl font-bold text-charcoal mb-12 tracking-tight">
+      <section className="mx-auto max-w-6xl px-6 py-12">
+        <p className="section-label mb-3">What We Study</p>
+        <h2 className="font-display text-2xl md:text-3xl font-bold text-charcoal mb-6 tracking-tight">
           Research Areas
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {researchHighlights.map((item, i) => (
             <AnimateOnScroll key={item.title} stagger={i + 1}>
-              <div className="bg-card-bg border border-card-border border-t-2 border-t-clemson-purple/15 rounded-lg p-8 card-hover h-full">
+              <div className="bg-card-bg border border-card-border border-t-2 border-t-clemson-purple/15 rounded-lg p-6 card-hover h-full">
                 <div className="w-12 h-12 rounded-md bg-clemson-purple/10 flex items-center justify-center text-clemson-purple mb-5">
                   {item.icon}
                 </div>
@@ -161,7 +125,7 @@ export default function Home() {
             </AnimateOnScroll>
           ))}
         </div>
-        <div className="mt-10 text-center">
+        <div className="mt-8 text-center">
           <Link
             href="/research"
             className="group font-body text-sm font-medium text-clemson-purple hover:text-clemson-purple-light transition-colors inline-flex items-center gap-1"
@@ -174,46 +138,40 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Lab in Numbers ── */}
-      <section className="border-y border-card-border bg-cream-dark/50">
-        <div className="mx-auto max-w-6xl px-6 py-14">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            {[
-              { value: yearRange, label: "Active Research" },
-              { value: String(totalPubs), label: "Publications" },
-              { value: String(journalCount), label: "Journal Articles" },
-              { value: "5", label: "Research Areas" },
-            ].map((stat) => (
-              <div key={stat.label}>
-                <span className="font-display text-3xl md:text-4xl font-bold text-clemson-purple">
-                  {stat.value}
-                </span>
-                <p className="font-body text-xs text-slate mt-1 tracking-wide uppercase">
-                  {stat.label}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── News ── */}
       <section className="bg-charcoal text-cream">
-        <div className="mx-auto max-w-6xl px-6 py-24">
-          <p className="section-label !text-clemson-orange-muted mb-5">Latest Updates</p>
-          <h2 className="font-display text-2xl md:text-3xl font-bold mb-12 tracking-tight">
+        <div className="mx-auto max-w-6xl px-6 py-8">
+          <p className="section-label !text-clemson-orange-muted mb-2">Latest Updates</p>
+          <h2 className="font-display text-2xl md:text-3xl font-bold mb-4 tracking-tight">
             Recent Publications
           </h2>
           <div className="space-y-0 divide-y divide-charcoal-light">
-            {newsItems.map((item, i) => (
+            {featuredPubs.map((pub, i) => (
               <AnimateOnScroll key={i} stagger={i + 1}>
-                <div className="py-6">
+                <div className="py-4">
                   <span className="inline-block font-body text-[10px] font-semibold tracking-widest uppercase px-2 py-0.5 rounded bg-white/[0.06] text-clemson-orange-muted mb-2">
-                    {item.tag}
+                    {pub.venue}
                   </span>
                   <p className="font-body text-base text-cream-dark leading-relaxed">
-                    {item.text}
+                    {pub.title}
                   </p>
+                  <p className="font-body text-sm text-cream-dark/60 mt-1">
+                    {pub.authors}
+                  </p>
+                  {pub.link && (
+                    <a
+                      href={pub.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 font-body text-sm font-medium text-clemson-orange-muted hover:text-clemson-orange transition-colors mt-2"
+                    >
+                      View paper
+                      <svg className="external-link-icon" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+                        <path d="M3.5 1.5h7v7M10.5 1.5L1.5 10.5" />
+                      </svg>
+                      <span className="sr-only"> (opens in a new tab)</span>
+                    </a>
+                  )}
                 </div>
               </AnimateOnScroll>
             ))}
@@ -223,11 +181,11 @@ export default function Home() {
 
       {/* ── Call to Action ── */}
       <section className="relative dot-grid">
-        <div className="mx-auto max-w-6xl px-6 py-24 text-center">
-          <h2 className="font-display text-2xl md:text-3xl font-bold text-charcoal mb-4 tracking-tight">
+        <div className="mx-auto max-w-6xl px-6 py-12 text-center">
+          <h2 className="font-display text-2xl md:text-3xl font-bold text-charcoal mb-3 tracking-tight">
             Interested in Our Work?
           </h2>
-          <p className="font-body text-charcoal-light text-lg max-w-lg mx-auto mb-8 leading-relaxed">
+          <p className="font-body text-charcoal-light text-lg max-w-lg mx-auto mb-6 leading-relaxed">
             We&apos;re always looking for motivated researchers, graduate students,
             and collaborators interested in XR, perception, conversational AI, and human factors.
           </p>
