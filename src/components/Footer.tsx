@@ -24,7 +24,7 @@ export default function Footer() {
                 aria-hidden="true"
               />
               <span className="font-display text-lg font-bold tracking-tight">
-                Presence Lab
+                P<span className="text-[0.7em] uppercase tracking-wide">resence</span> L<span className="text-[0.7em] uppercase tracking-wide">ab</span>
               </span>
             </div>
             <p className="font-body text-sm text-cream-dark leading-relaxed max-w-xs mb-3">
@@ -97,7 +97,7 @@ export default function Footer() {
         <hr className="border-charcoal-light mt-10 mb-6" />
 
         <p className="font-body text-xs text-slate text-center sm:text-left">
-          &copy; {new Date().getFullYear()} Presence Lab, Clemson University. All rights reserved.
+          &copy; {new Date().getFullYear()} P<span className="text-[0.7em] uppercase tracking-wide">resence</span> L<span className="text-[0.7em] uppercase tracking-wide">ab</span>, Clemson University. All rights reserved.
         </p>
       </div>
     </footer>

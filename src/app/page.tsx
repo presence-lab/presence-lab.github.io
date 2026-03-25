@@ -70,13 +70,13 @@ export default function Home() {
         </div>
         <div className="relative mx-auto max-w-6xl px-6 pt-16 pb-12 md:pt-24 md:pb-20">
           <div className="max-w-3xl">
-            <p className="section-label mb-5 animate-fade-in-up stagger-1">
-              <a href="https://www.clemson.edu" className="hover:text-clemson-orange transition-colors">Clemson University</a> Research Lab
+            <p className="font-body text-2xl md:text-3xl font-bold text-charcoal border-l-[3px] border-clemson-orange pl-4 mb-6 animate-fade-in-up stagger-1">
+              P<span className="text-[0.7em] uppercase tracking-wide">resence</span> L<span className="text-[0.7em] uppercase tracking-wide">ab</span>
             </p>
-            <h1 className="font-display text-5xl md:text-7xl font-bold text-charcoal leading-[1.1] tracking-tight mb-6 animate-fade-in-up stagger-2">
+            <h2 className="font-display text-5xl md:text-7xl font-bold text-charcoal leading-[1.1] tracking-tight mb-6 animate-fade-in-up stagger-2">
               Virtual Encounters,
               <span className="block text-clemson-regalia">Real Experiences</span>
-            </h1>
+            </h2>
             <p className="font-body text-lg md:text-xl text-charcoal-light leading-relaxed max-w-xl mb-6 animate-fade-in-up stagger-3">
               We investigate how people perceive, interact with, and relate to
               virtual environments and intelligent agents &mdash; from spatial

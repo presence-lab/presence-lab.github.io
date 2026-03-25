@@ -43,7 +43,7 @@ export default function Navigation() {
           />
           <div className="flex flex-col">
             <span className="font-display text-xl font-bold text-charcoal tracking-tight leading-tight">
-              Presence Lab
+              P<span className="text-[0.7em] uppercase tracking-wide">resence</span> L<span className="text-[0.7em] uppercase tracking-wide">ab</span>
             </span>
             <span className="text-[10px] font-body font-medium text-slate tracking-widest uppercase leading-tight">
               Human-Centered Computing{" "}

@@ -144,7 +144,7 @@ export default function PeoplePage() {
             People
           </h1>
           <p className="font-body text-lg text-charcoal-light max-w-xl leading-relaxed">
-            The Presence Lab brings together researchers from computer science,
+            The P<span className="text-[0.7em] uppercase tracking-wide">resence</span> L<span className="text-[0.7em] uppercase tracking-wide">ab</span> brings together researchers from computer science,
             psychology, and human factors, united by a shared interest in
             understanding perception and interaction in virtual environments
             and with intelligent conversational agents.
