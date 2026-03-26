@@ -6,6 +6,7 @@ export interface Publication {
   type: "Journal" | "Conference" | "Workshop" | "Dissertation" | "Editorial";
   link?: string;
   featured?: boolean;
+  award?: string;
 }
 
 export const publications: Publication[] = [
@@ -78,6 +79,7 @@ export const publications: Publication[] = [
     venue: "IEEE Transactions on Visualization and Computer Graphics 30 (5), 2756-2766",
     type: "Journal",
     link: "https://doi.org/10.1109/TVCG.2024.3372050",
+    award: "Best Presentation Honorable Mention, IEEE VR 2024",
   },
   {
     year: 2024,
@@ -86,6 +88,7 @@ export const publications: Publication[] = [
     venue: "IEEE Transactions on Visualization and Computer Graphics 30 (5), 2745-2755",
     type: "Journal",
     link: "https://doi.org/10.1109/TVCG.2024.3372080",
+    award: "Best Presentation, IEEE VR 2024",
   },
   {
     year: 2024,
@@ -112,6 +115,7 @@ export const publications: Publication[] = [
     venue: "IEEE Transactions on Visualization and Computer Graphics 30 (8), 5350-5369",
     type: "Journal",
     link: "https://doi.org/10.1109/TVCG.2023.3293405",
+    award: "Best Presentation, IEEE VR 2024",
   },
   {
     year: 2023,
@@ -151,6 +155,7 @@ export const publications: Publication[] = [
     venue: "IEEE Transactions on Visualization and Computer Graphics 29 (5), 2258-2268",
     type: "Journal",
     link: "https://doi.org/10.1109/TVCG.2023.3247041",
+    award: "Best Paper, IEEE VR 2023",
   },
   {
     year: 2023,
@@ -159,6 +164,7 @@ export const publications: Publication[] = [
     venue: "IEEE Transactions on Visualization and Computer Graphics 29 (5), 2412-2422",
     type: "Journal",
     link: "https://doi.org/10.1109/TVCG.2023.3247105",
+    award: "Best Paper Honorable Mention, IEEE VR 2023",
   },
   {
     year: 2023,
@@ -433,6 +439,7 @@ export const publications: Publication[] = [
     venue: "2018 IEEE Conference on Virtual Reality and 3D User Interfaces (VR), 1-8",
     type: "Conference",
     link: "https://doi.org/10.1109/VR.2018.8446539",
+    award: "Best Paper, IEEE VR 2018",
   },
   {
     year: 2018,

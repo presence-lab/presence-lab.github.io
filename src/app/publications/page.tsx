@@ -138,6 +138,14 @@ export default function PublicationsPage() {
                               {pub.venue}
                             </p>
                           )}
+                          {pub.award && (
+                            <p className="inline-flex items-center gap-1.5 font-body text-xs font-semibold text-clemson-orange mt-1.5 px-2 py-0.5 bg-clemson-orange/10 rounded w-fit">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5C7 4 7 7 7 7M18 9h1.5a2.5 2.5 0 0 0 0-5C17 4 17 7 17 7M12 18v4M8 22h8M12 2v7M8.5 7h7l-.8 5.2a4 4 0 0 1-2.3 2.9L12 15.3l-.4-.2a4 4 0 0 1-2.3-2.9L8.5 7Z" />
+                              </svg>
+                              {pub.award}
+                            </p>
+                          )}
                           {pub.link && (
                             <a
                               href={pub.link}

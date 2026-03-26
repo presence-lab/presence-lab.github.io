@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 interface Paper {
   title: string;
   citation: string;
+  award?: string;
 }
 
 interface ResearchArea {
@@ -45,6 +46,7 @@ const researchAreas: ResearchArea[] = [
       {
         title: "How virtual hand representations affect the perceptions of dynamic affordances in virtual reality",
         citation: "R Venkatakrishnan et al. IEEE TVCG 29(5), 2023",
+        award: "Best Paper, IEEE VR 2023",
       },
       {
         title: "It Is Only Eco-Logical: Direct Perception for XR Research",
@@ -71,6 +73,7 @@ const researchAreas: ResearchArea[] = [
       {
         title: "The effects of auditory, visual, and cognitive distractions on cybersickness in virtual reality",
         citation: "R Venkatakrishnan et al. IEEE TVCG 30(8), 2023",
+        award: "Best Presentation, IEEE VR 2024",
       },
       {
         title: "Changes in navigation over time: A comparison of teleportation and joystick-based locomotion",
@@ -101,6 +104,7 @@ const researchAreas: ResearchArea[] = [
       {
         title: "Investigating the effects of avatarization and interaction techniques on near-field mixed reality interactions with physical components",
         citation: "R Venkatakrishnan et al. IEEE TVCG 30(5), 2024",
+        award: "Best Presentation Honorable Mention, IEEE VR 2024",
       },
       {
         title: "Examining the effects of altered avatars on perception-action in virtual reality",
@@ -109,36 +113,6 @@ const researchAreas: ResearchArea[] = [
       {
         title: "Can I squeeze through? Effects of self-avatars and calibration in a person-plus-virtual-object system on perceived lateral passability in VR",
         citation: "A Bhargava et al. IEEE TVCG 29(5), 2023",
-      },
-    ],
-  },
-  {
-    title: "Social Virtual Reality",
-    description:
-      "We explore how people form connections, navigate social dynamics, and build community in shared virtual spaces. Our research examines teenagers' and children's experiences in social VR, the ethical implications of virtual identity and avatar use, and therapeutic applications such as overcoming social anxiety through social VR exposure.",
-    projects: [
-      "Why teenagers and children engage in social VR",
-      "Ethical considerations of social VR and virtual avatars",
-      "Social VR for overcoming social anxiety disorder",
-      "Interacting with children in virtual social spaces",
-      "Implicit bias and embodied avatar representation",
-    ],
-    papers: [
-      {
-        title: "Social virtual reality: ethical considerations and future directions for an emerging research space",
-        citation: "D Maloney, G Freeman, A Robb. IEEE VR Workshops, 2021",
-      },
-      {
-        title: "Stay connected in an immersive world: Why teenagers engage in social virtual reality",
-        citation: "D Maloney, G Freeman, A Robb. ACM IDC, 2021",
-      },
-      {
-        title: "Social virtual reality is my therapist: overcoming social anxiety disorder through using social virtual reality",
-        citation: "S Zamanifard, A Robb. CHI EA, 2023",
-      },
-      {
-        title: "A virtual space for all: Exploring children\u2019s experience in social virtual reality",
-        citation: "D Maloney, G Freeman, A Robb. CHI PLAY, 2020",
       },
     ],
   },
@@ -278,6 +252,14 @@ export default function ResearchPage() {
                           <p className="font-body text-xs text-slate mt-0.5">
                             {paper.citation}
                           </p>
+                          {paper.award && (
+                            <p className="inline-flex items-center gap-1.5 font-body text-[11px] font-semibold text-clemson-orange mt-1 px-1.5 py-0.5 bg-clemson-orange/10 rounded w-fit">
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5C7 4 7 7 7 7M18 9h1.5a2.5 2.5 0 0 0 0-5C17 4 17 7 17 7M12 18v4M8 22h8M12 2v7M8.5 7h7l-.8 5.2a4 4 0 0 1-2.3 2.9L12 15.3l-.4-.2a4 4 0 0 1-2.3-2.9L8.5 7Z" />
+                              </svg>
+                              {paper.award}
+                            </p>
+                          )}
                         </li>
                       ))}
                     </ul>
