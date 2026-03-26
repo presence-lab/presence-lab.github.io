@@ -18,7 +18,7 @@ interface Person {
 const pi: Person = {
   name: "Andrew Robb",
   role: "Principal Investigator",
-  title: "Assistant Professor, Clemson University",
+  title: "Associate Professor, Clemson University",
   bio: "Dr. Robb directs the Presence Lab at Clemson University. His research focuses on understanding how people perceive and interact with virtual and augmented environments and intelligent conversational agents, with emphasis on spatial perception, cybersickness, social VR, affordance perception, human-agent interaction, and the design and evaluation of LLM-powered systems. He received his PhD from the University of Florida, where he studied mixed-agency teams and social presence in virtual human-based training simulations.",
   interests: [
     "Virtual Reality",
