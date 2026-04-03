@@ -55,6 +55,7 @@ export default function Footer() {
                 { href: "/research", label: "Research" },
                 { href: "/people", label: "People" },
                 { href: "/publications", label: "Publications" },
+                { href: "/docs", label: "Docs" },
                 { href: "/contact", label: "Join the Lab" },
               ].map(({ href, label }) => (
                 <li key={href}>

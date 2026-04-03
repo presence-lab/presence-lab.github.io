@@ -18,8 +18,13 @@ export default async function DocsLayout({
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-10">
+      {/* Mobile sidebar toggle */}
+      <div className="md:hidden mb-6">
+        <DocsSidebar categories={sidebarData} mobile />
+      </div>
+
       <div className="flex gap-10">
-        {/* Sidebar — hidden on mobile, shown on md+ */}
+        {/* Desktop sidebar */}
         <aside className="hidden md:block w-64 shrink-0">
           <div className="sticky top-24">
             <DocsSidebar categories={sidebarData} />

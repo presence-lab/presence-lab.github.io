@@ -16,24 +16,57 @@ interface SidebarCategory {
 
 export default function DocsSidebar({
   categories,
+  mobile = false,
 }: {
   categories: SidebarCategory[];
+  mobile?: boolean;
 }) {
   const pathname = usePathname();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  return (
-    <nav aria-label="Documentation" className="w-full">
-      <div className="space-y-6">
-        {categories.map((category) => (
-          <SidebarSection
-            key={category.name}
-            category={category}
-            pathname={pathname}
-          />
-        ))}
-      </div>
-    </nav>
+  const sidebar = (
+    <div className="space-y-6">
+      {categories.map((category) => (
+        <SidebarSection
+          key={category.name}
+          category={category}
+          pathname={pathname}
+        />
+      ))}
+    </div>
   );
+
+  if (mobile) {
+    return (
+      <>
+        <button
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className="flex items-center gap-2 font-body text-sm font-medium text-clemson-purple"
+          aria-expanded={mobileOpen}
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 18 18"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            aria-hidden="true"
+          >
+            <path d="M3 4h12M3 9h12M3 14h12" />
+          </svg>
+          Browse docs
+        </button>
+        {mobileOpen && (
+          <div className="mt-4 border border-card-border rounded-lg p-4 bg-card-bg">
+            <nav aria-label="Documentation">{sidebar}</nav>
+          </div>
+        )}
+      </>
+    );
+  }
+
+  return <nav aria-label="Documentation">{sidebar}</nav>;
 }
 
 function SidebarSection({
