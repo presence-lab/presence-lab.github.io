@@ -22,7 +22,7 @@ export async function getAllDocs(): Promise<DocMeta[]> {
 
   for (const file of files) {
     const slug = file.replace(/\.mdx$/, "").split("/");
-    const mod = await import(`@/../../content/docs/${file}`);
+    const mod = await import(`../../content/docs/${file}`);
     const meta = mod.metadata;
     if (!meta?.title || !meta?.category) continue;
     docs.push({
