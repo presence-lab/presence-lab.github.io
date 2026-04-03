@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getAllDocs, getDocSlugs } from "@/lib/docs";
+import { getAllDocsFlat, getDocSlugs } from "@/lib/docs";
 import DocsNavigation from "@/components/DocsNavigation";
 
 export const dynamicParams = false;
@@ -47,7 +47,7 @@ export default async function DocPage({
   }
 
   // Build prev/next from ordered doc list
-  const allDocs = await getAllDocs();
+  const allDocs = await getAllDocsFlat();
   const currentIndex = allDocs.findIndex(
     (d) => d.slug.join("/") === filePath
   );
@@ -55,8 +55,13 @@ export default async function DocPage({
   const next =
     currentIndex < allDocs.length - 1 ? allDocs[currentIndex + 1] : null;
 
-  // Find current doc for breadcrumb
+  // Find current doc and parent doc for breadcrumb
   const currentDoc = allDocs[currentIndex];
+  // A doc is a child if its slug has 3+ segments and a parent doc exists
+  const parentSlugKey = slug.length > 2 ? slug.slice(0, -1).join("/") : null;
+  const parentDoc = parentSlugKey
+    ? allDocs.find((d) => d.slug.join("/") === parentSlugKey)
+    : null;
 
   return (
     <article>
@@ -73,6 +78,19 @@ export default async function DocPage({
             &rsaquo;
           </span>
           <span className="text-charcoal-light">{currentDoc.category}</span>
+          {parentDoc && (
+            <>
+              <span className="mx-1.5" aria-hidden="true">
+                &rsaquo;
+              </span>
+              <Link
+                href={`/docs/${parentDoc.slug.join("/")}`}
+                className="hover:text-charcoal transition-colors"
+              >
+                {parentDoc.title}
+              </Link>
+            </>
+          )}
           <span className="mx-1.5" aria-hidden="true">
             &rsaquo;
           </span>

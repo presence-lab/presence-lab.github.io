@@ -1,0 +1,134 @@
+export const metadata = {
+  title: "Getting Started with Codex",
+  description: "What Codex is, how to access it, cloud vs CLI modes, and running your first task.",
+  category: "Development Tools",
+  order: 2,
+};
+
+# Getting Started with Codex
+
+Codex is OpenAI's cloud-based coding agent. You describe a task in natural language, Codex reads your codebase, writes code in an isolated <Def>sandbox</Def>, and proposes a pull request for you to review. It does not push code directly to your repository — you always review before merging.
+
+Think of Codex as a junior developer who works in a clean room. You give clear instructions, they do the work in isolation, and you review what comes back. They are fast and tireless but need specific direction and careful code review.
+
+---
+
+## Two Modes: Cloud and CLI
+
+Codex operates in two distinct modes with different tradeoffs.
+
+### Codex Cloud
+
+Codex Cloud runs through the ChatGPT web interface. When you start a task:
+
+1. OpenAI spins up an isolated container preloaded with your repository
+2. Codex reads your codebase, AGENTS.md, and any context you provide
+3. Network access is **disabled** during the agent phase — Codex cannot reach external APIs, install packages from the internet, or exfiltrate code
+4. Codex writes code, runs tests, and iterates until the task is complete (or it gets stuck)
+5. You receive a proposed <Def>PR</Def> with a diff to review
+
+The network-disabled sandbox is a deliberate security choice. It means Codex cannot accidentally leak your code, install malicious packages, or make unwanted API calls. The tradeoff is that it cannot install new dependencies or access external documentation during execution.
+
+### Codex CLI
+
+Codex <Def>CLI</Def> is open source (Apache 2.0 license, 67K+ GitHub stars) and runs locally on your machine. It connects to OpenAI's API and operates directly on your filesystem.
+
+The CLI gives you more control — you can configure which tools Codex has access to, work with local services, and integrate it into existing workflows. The tradeoff is that you manage your own security boundaries rather than relying on OpenAI's sandbox.
+
+---
+
+## How to Access Codex
+
+There are several ways to get access:
+
+- **ChatGPT Plus** ($20/month) — includes Codex Cloud access with usage limits
+- **ChatGPT Pro** ($200/month) — higher usage limits for heavier workloads
+- **ChatGPT Edu** — institutional access available through universities. Check with Clemson's IT department for availability
+- **Student credits** — OpenAI offers $100 in Codex credits for verified US and Canadian university students. Verify your `.edu` email at [education.openai.com](https://education.openai.com)
+- **GitHub Student Developer Pack** — includes free GitHub Copilot access, which is a different tool but part of the same ecosystem. Apply at [education.github.com](https://education.github.com)
+
+For lab work, ChatGPT Plus or the student credits are the most practical starting points.
+
+---
+
+## Installing the CLI
+
+If you want to use Codex locally, install the CLI via npm:
+
+```bash
+npm install -g @openai/codex
+```
+
+Then set your API key:
+
+```bash
+export OPENAI_API_KEY="your-key-here"
+```
+
+Add the export to your shell profile (`.bashrc`, `.zshrc`, etc.) so it persists across sessions. You can then run Codex from any project directory:
+
+```bash
+cd your-project
+codex "describe your task here"
+```
+
+The CLI will read your project's AGENTS.md file automatically and apply those conventions to its work.
+
+---
+
+## Models Available
+
+Codex uses specialized model variants optimized for code generation:
+
+| Model | Context Window | Best For |
+|-------|---------------|----------|
+| GPT-5.2/5.3-Codex | 400K <Def>token</Def>s | Standard development tasks |
+| GPT-5.1-Codex-Max | Multi-window <Def>compaction</Def> | Long-running tasks (24+ hours) with large codebases |
+| GPT-5.4-mini | Smaller context | Lighter tasks, faster turnaround, lower cost |
+
+The 400K token <Def>context window</Def> is large — roughly equivalent to a medium-sized codebase. But as we cover in the [Context Management](/docs/development-tools/context-management) guide, context quality degrades well before you hit the limit.
+
+GPT-5.1-Codex-Max uses a technique called multi-window compaction: when context exceeds the window, it summarizes earlier portions and continues, allowing it to sustain coherence across very long tasks. This is useful for large refactors but is not a substitute for good task decomposition.
+
+---
+
+## Your First Task
+
+Here is a concrete walkthrough of using Codex Cloud on a <Def>Next.js</Def> project:
+
+**1. Start a new Codex session** in ChatGPT and connect your GitHub repository.
+
+**2. Describe a focused task:**
+
+> Add a "Back to Top" button component at `src/components/BackToTop.tsx`. The button should appear in the bottom-right corner when the user scrolls more than 300px down the page. Clicking it should smooth-scroll to the top. Use the project's existing <Def>Tailwind</Def> classes for styling. Write a unit test in `src/__tests__/BackToTop.test.tsx`.
+
+Notice the specificity: exact file paths, clear behavior, styling approach, and a test file. This is the kind of instruction that produces good results.
+
+**3. Wait for Codex to execute.** It will clone your repo into its sandbox, read your AGENTS.md, write the component and test, and run any test commands specified in your configuration.
+
+**4. Review the proposed PR.** Codex will present a diff. Check:
+- Does the component logic match what you asked for?
+- Are there any hardcoded values that should be configurable?
+- Does the test actually test meaningful behavior, or is it just checking that the component renders?
+- Are the Tailwind classes consistent with the rest of the project?
+
+**5. Request changes or merge.** If something needs adjustment, describe the change in the same session. If it looks good, approve and merge the PR.
+
+<Callout type="tip">
+**Use the one-task-per-session pattern.** Each Codex Cloud task runs in a fresh sandbox, which means you get a clean context window every time. Rather than asking for multiple features in one session, start a new session for each discrete task. This avoids context degradation and makes each PR easier to review. Think of it like writing focused git commits — one logical change per unit of work.
+</Callout>
+
+---
+
+## What Makes a Good Task
+
+Good Codex tasks share a few characteristics:
+
+- **Specific output**: name the files to create or modify
+- **Clear acceptance criteria**: describe what "done" looks like, ideally including tests
+- **Bounded scope**: one feature, one bug fix, one refactor — not all three
+- **Context provided**: if the task depends on existing patterns in the codebase, point Codex to the relevant files
+
+Bad tasks are vague ("make the UI better"), unbounded ("add authentication and user profiles and settings"), or assume knowledge Codex does not have about your project's conventions (unless you wrote it in AGENTS.md).
+
+The next section, [Setting Up AGENTS.md](/docs/development-tools/setting-up-agents-md), covers how to give Codex the project knowledge it needs to work effectively.

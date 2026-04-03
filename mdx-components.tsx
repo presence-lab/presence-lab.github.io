@@ -1,4 +1,5 @@
 import type { MDXComponents } from "mdx/types";
+import Def from "@/components/Def";
 
 function Callout({
   type = "note",
@@ -44,5 +45,6 @@ function Callout({
 export function useMDXComponents(): MDXComponents {
   return {
     Callout,
+    Def,
   };
 }

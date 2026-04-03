@@ -49,13 +49,7 @@ export default function Navigation() {
             <span className="text-[10px] font-body font-medium text-slate tracking-widest uppercase leading-tight">
               Human-Centered Computing{" "}
               <span className="text-slate/40 mx-0.5" aria-hidden="true">&middot;</span>{" "}
-              <a
-                href="https://www.clemson.edu"
-                className="hover:text-clemson-orange transition-colors"
-                onClick={(e) => e.stopPropagation()}
-              >
-                Clemson University
-              </a>
+              Clemson University
             </span>
           </div>
         </Link>

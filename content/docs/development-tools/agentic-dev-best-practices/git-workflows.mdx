@@ -1,0 +1,155 @@
+export const metadata = {
+  title: "Git Workflows for Codex Development",
+  description: "Branching strategies, PR-based review, conventional commits, and parallel development with cloud sandboxes.",
+  category: "Development Tools",
+  order: 6,
+};
+
+# Git Workflows for Codex Development
+
+Version control is where the human-agent collaboration gets concrete. Codex writes code, but you control what makes it into your project. Git is the mechanism for that control.
+
+---
+
+## The Golden Rule
+
+**AI agents can propose code, never own it.**
+
+Codex opens pull requests for human review. Humans approve merges. This is not a workflow suggestion — it's a fundamental principle. The moment you let an agent push directly to your main branch without review, you've given up the single most important quality gate you have.
+
+Every Codex task should end the same way: a <Def>PR</Def> that a human reads, evaluates, and either merges or sends back for revision.
+
+---
+
+## Codex's Sandbox Model
+
+Each Codex cloud task runs in an isolated <Def>sandbox</Def> environment that's preloaded with your repository. This has important implications for how you think about git:
+
+- Codex **cannot** push directly to `main` or force-push to any branch
+- Each task gets its own environment — no shared state between tasks
+- The agent commits to a feature branch and opens a PR
+- If the task fails or produces bad output, your codebase is unaffected
+
+This sandbox model is a safety net. Use it deliberately by structuring your work around feature branches and PRs rather than trying to get Codex to work on shared branches.
+
+---
+
+## Feature Branch Workflow
+
+The standard flow for Codex development:
+
+```
+feature/*  →  PR  →  develop  →  PR  →  main  →  production
+```
+
+Each Codex task creates work on a <Def>feature branch</Def>. That branch gets reviewed via PR before merging into your development branch. When the development branch is stable, it merges to main for deployment.
+
+For smaller projects (like most lab work), you can simplify this to:
+
+```
+feature/*  →  PR  →  main
+```
+
+The critical piece is that there's always a PR between agent-generated code and any branch you deploy from. Never skip the PR step.
+
+---
+
+## Conventional Commits
+
+<Def>Conventional commits</Def> are a standardized format for commit messages that makes history easier to read and enables automated tooling (changelogs, version bumping, etc.). The format:
+
+```
+type(scope): description
+
+feat(auth): add OAuth login flow
+fix(cart): correct tax calculation rounding
+chore(deps): update vitest to v3.2
+docs(api): add endpoint documentation
+refactor(utils): extract date formatting helpers
+```
+
+Common types: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `style`, `perf`.
+
+### Configuring in AGENTS.md
+
+```markdown
+## Commit Conventions
+
+Use conventional commits: feat:, fix:, chore:, docs:, refactor:
+Include scope when relevant: feat(auth): add OAuth flow
+Write commit messages that describe WHAT changed, not WHY.
+```
+
+<Callout type="note">
+Agents are generally good at writing the technical "what" of a commit message — "add error handling to login endpoint" — but struggle with the "why" — the business context or user story that motivated the change. If the "why" matters (and it usually does), add it yourself when reviewing the PR, or include it in the task description so the agent can echo it back.
+</Callout>
+
+---
+
+## Parallel Development
+
+One of Codex's strongest practical advantages is that you can launch multiple sessions targeting different feature branches simultaneously. Each session gets its own isolated sandbox, so there are no port conflicts, database collisions, or file lock issues.
+
+<Callout type="tip">
+Use multiple Codex sessions in parallel for independent features. While one session implements the API endpoint, another can build the UI component, and a third can write the database migration. Each works in its own sandbox and opens its own PR. This is where agent-assisted development saves the most time — not by writing code faster, but by parallelizing work that would otherwise be sequential.
+</Callout>
+
+To use this effectively:
+
+1. **Plan the work breakdown first.** Identify features that can be built independently without conflicting changes to the same files.
+2. **Create separate branches** for each task before launching sessions (or let Codex create them).
+3. **Launch sessions simultaneously**, each with a clear, scoped task.
+4. **Review and merge PRs in dependency order** — merge the database schema before the API endpoint that depends on it.
+
+The constraint is that the features truly need to be independent. If two tasks need to modify the same file, they'll produce merge conflicts that you'll have to resolve manually.
+
+---
+
+## PR Review Practices for Agent-Generated Code
+
+Reviewing agent-generated PRs requires more scrutiny than reviewing human-written code, not less. Humans make mistakes you can often anticipate. Agents make mistakes that can look plausible at a glance but be fundamentally wrong.
+
+Here's what to check:
+
+**Hallucinated APIs and packages.** The agent may call functions that don't exist in the library version you're using, or import packages that sound real but aren't. Verify that every import resolves to an actual, installed dependency.
+
+**Hardcoded secrets.** Check for API keys, tokens, passwords, or connection strings embedded directly in the code. Agents will sometimes hardcode values from environment examples or documentation.
+
+**Test integrity.** Confirm that test files haven't been modified (if they shouldn't have been), that assertions are meaningful, and that tests exercise real code rather than mocks. See the [Test-Driven Development](/docs/development-tools/test-driven-development) section for specific sabotage patterns.
+
+**Unnecessary dependencies.** Agents sometimes add npm packages to solve problems that could be handled with a few lines of code. Each added dependency is a maintenance burden and a potential security surface.
+
+**Scope creep.** Check that the PR only touches files relevant to the task. Agents sometimes "helpfully" refactor nearby code or add features that weren't requested.
+
+---
+
+## Risks Agents Pose to Version Control
+
+Beyond the code quality issues above, agents can create specific problems for your git history and repository health:
+
+- **Large uncommitted diffs.** An agent that works for a long time without committing can produce massive diffs that are difficult to review and impossible to partially revert.
+- **Hallucinated APIs and packages.** When these slip through review, they create runtime errors that may not surface until deployment.
+- **Security vulnerabilities.** Generated code with SQL injection, <Def>XSS</Def>, or other flaws becomes part of your committed history and may require careful cleanup.
+- **Accidental unwanted changes.** The agent may modify configuration files, lock files, or other shared resources in ways that cause problems downstream.
+
+---
+
+## Git Recovery Basics
+
+When an agent produces bad output — and it will eventually — you need to know how to recover. These aren't Codex-specific skills, but they become more important when you're reviewing and integrating agent-generated code regularly.
+
+**`git log`** — Read the commit history to understand what the agent actually did, step by step.
+
+**`git diff`** — Compare the agent's branch against your base branch to see the full scope of changes before merging.
+
+**`git reset`** — Undo commits on a branch when the agent went in a wrong direction. Use `--soft` to keep changes staged, `--mixed` (default) to unstage them, or `--hard` to discard them entirely.
+
+**`git stash`** — Temporarily shelve changes when you need to switch context or try a different approach.
+
+These commands are your safety net. If you're not comfortable with them, spend time with the [Pro Git book](https://git-scm.com/book/en/v2) (free online) before doing significant agent-assisted development. The cost of a git mistake is much lower than the cost of not knowing how to fix one.
+
+---
+
+## Summary
+
+The git workflow for Codex development is built around one principle: the agent proposes, the human decides. Feature branches and PRs are the mechanism for that review. Conventional commits keep history readable. Parallel sessions let you get more done. And knowing your way around git recovery commands means you can always undo what didn't work.

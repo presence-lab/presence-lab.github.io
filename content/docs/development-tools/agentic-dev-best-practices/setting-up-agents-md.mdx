@@ -1,0 +1,182 @@
+export const metadata = {
+  title: "Setting Up AGENTS.md",
+  description: "Writing effective AGENTS.md configuration files — what to include, what to leave out, and a ready-to-use template.",
+  category: "Development Tools",
+  order: 3,
+};
+
+# Setting Up AGENTS.md
+
+AGENTS.md is a Markdown file in your project root that tells coding agents how to work in your codebase. It is an open standard maintained by the Linux Foundation's Agentic AI Foundation (launched December 2025), adopted by over 60K GitHub repositories, and read by Codex, GitHub Copilot, Cursor, Windsurf, and 20+ other tools.
+
+Writing a good AGENTS.md is probably the highest-leverage thing you can do to improve agent output quality. It is the difference between an agent that follows your project's conventions and one that invents its own.
+
+---
+
+## Three Scoping Levels
+
+AGENTS.md files cascade, with more specific files overriding more general ones:
+
+1. **Global** (`~/.codex/AGENTS.md`) — personal preferences that apply across all your projects. Good for things like your preferred commit message format or coding style.
+
+2. **Project root** (`./AGENTS.md`) — project-wide conventions. This is the most important file and where you should focus your effort.
+
+3. **Subdirectory** (`./src/components/AGENTS.md`) — conventions specific to a part of the codebase. Useful for monorepos or when different directories follow different patterns.
+
+You can also create `AGENTS.override.md` at any level to add rules that take precedence over the base file without modifying it. This is useful when you want to layer personal preferences on top of a team's shared configuration.
+
+<Callout type="warning">
+**The combined size of all AGENTS.md files is capped at 32 KiB.** Every byte of AGENTS.md consumes context window space that could otherwise hold your code. Keep the file lean and curated. An ETH Zurich study found that LLM-auto-generated context files slightly *reduced* task success by about 3%, while human-written files improved success by about 4% — but both increased token costs by roughly 20%. Write only what matters, and write it yourself.
+</Callout>
+
+---
+
+## What to Include
+
+A good AGENTS.md answers the questions an agent would otherwise have to guess at:
+
+### Project Context
+A one-liner explaining what the project is and its primary tech stack. Agents use this to calibrate their assumptions.
+
+### Build, Test, and Lint Commands
+The exact commands to run. Agents will execute these to verify their work. If the commands are wrong or missing, the agent cannot self-check.
+
+### Code Style Rules Not Enforced by Linters
+<Def term="linter">Linters</Def> catch formatting and syntax issues automatically. AGENTS.md should cover the conventions linters *cannot* enforce: naming patterns, component structure, where to put new files, how to organize imports beyond sort order, preferred patterns for error handling, etc.
+
+### Architecture Notes
+Which directories contain what. How data flows. Where the API boundaries are. What patterns new code should follow.
+
+### Files to Never Modify
+Lock files, generated code, migration files, configuration that should only be changed through specific processes.
+
+### Git and Testing Conventions
+Branch naming, commit message format, what needs tests, what kind of tests (unit vs integration), minimum coverage expectations.
+
+### Security Rules
+Secrets handling, environment variable patterns, authentication requirements, data validation expectations.
+
+---
+
+## What to Leave Out
+
+The ETH Zurich finding bears repeating: more is not better. Omit:
+
+- **Anything your linter enforces.** If <Def>ESLint</Def> already catches it, do not duplicate the rule in AGENTS.md. LLMs are comparably expensive and incredibly slow compared to linters — let the linter do its job.
+- **Vague instructions.** "Write clean code" and "follow best practices" waste tokens and provide no actionable guidance.
+- **Auto-generated content.** Do not ask an <Def>LLM</Def> to generate your AGENTS.md. Curate it yourself based on what actually matters in your project.
+- **Obvious things.** "Use TypeScript" in a TypeScript project adds nothing.
+
+---
+
+## Equivalent Files in Other Tools
+
+AGENTS.md is the most widely adopted standard, but you may encounter similar files:
+
+| File | Tool |
+|------|------|
+| `AGENTS.md` | Codex, Copilot, Cursor, and 20+ tools (open standard) |
+| `CLAUDE.md` | Claude Code (Anthropic) |
+| `.cursor/rules` | Cursor (directory of rule files) |
+| `.github/copilot-instructions.md` | GitHub Copilot |
+| `.windsurfrules` | Windsurf |
+
+The content is conceptually the same across all of these — project conventions in a format the agent can read. If you use multiple tools, you can maintain one canonical file and symlink or copy it.
+
+---
+
+## Complete Template
+
+Below is a ready-to-use AGENTS.md template for a Next.js + TypeScript project (the Presence Lab's stack). Copy it, fill in the bracketed placeholders, and delete any sections that do not apply.
+
+````markdown
+# AGENTS.md
+
+## Project Overview
+
+[One sentence: what this project is and who it serves.]
+
+## Tech Stack
+
+- Next.js 15 (App Router)
+- TypeScript (strict mode)
+- Tailwind CSS
+- [Database/ORM if applicable]
+- [Testing framework]
+
+## Commands
+
+```bash
+# Development
+npm run dev
+
+# Build (must pass before any PR)
+npm run build
+
+# Type checking
+npx tsc --noEmit
+
+# Linting
+npm run lint
+
+# Run all tests
+npm test
+
+# Run a single test file
+npm test -- path/to/test.ts
+```
+
+## Code Conventions
+
+- Use named exports, not default exports
+- Components go in `src/components/` with PascalCase filenames
+- Utility functions go in `src/lib/` with camelCase filenames
+- Server actions go in `src/app/actions/`
+- Use `async`/`await` over `.then()` chains
+- Prefer early returns over deeply nested conditionals
+- Error messages should be user-facing strings, not technical jargon
+
+## File Structure
+
+```
+src/
+  app/           # Next.js App Router pages and layouts
+  components/    # Reusable UI components
+  lib/           # Utility functions and shared logic
+  types/         # TypeScript type definitions
+  __tests__/     # Test files (mirror src/ structure)
+content/         # MDX content files
+public/          # Static assets
+```
+
+## Git Workflow
+
+- Branch names: `feat/short-description`, `fix/short-description`
+- Commit messages: conventional commits (`feat:`, `fix:`, `docs:`, `refactor:`)
+- One logical change per commit
+- All PRs require passing CI before merge
+
+## Do Not Modify
+
+- `package-lock.json` (only modify via `npm install`)
+- Files in `public/generated/` (auto-generated)
+- Database migration files once merged to main
+- `.env.local` or any `.env*` files
+
+## Testing
+
+- Write tests for all new components and utility functions
+- Test files go in `src/__tests__/` mirroring the source structure
+- Use descriptive test names: `it("displays error message when login fails")`
+- Test behavior, not implementation details
+- Mock external API calls; never hit real endpoints in tests
+
+## Security
+
+- Never hardcode secrets, API keys, or credentials
+- Use environment variables via `process.env` for all secrets
+- Validate all user input on the server side
+- Do not log sensitive data (tokens, passwords, PII)
+````
+
+Adapt this to your project. Remove sections that are not relevant and add sections for patterns specific to your codebase. The goal is a document that a new contributor — human or agent — could read and immediately understand how to work in the project.

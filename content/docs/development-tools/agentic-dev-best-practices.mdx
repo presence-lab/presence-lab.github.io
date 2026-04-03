@@ -1,29 +1,61 @@
 export const metadata = {
-  title: "Best Practices for Agentic Development",
-  description: "A guide to onboarding students to AI-assisted development tools.",
+  title: "Agentic Development with Codex: Guide Overview",
+  description: "A research-backed guide to using OpenAI Codex effectively — configuration, testing, security, workflows, and more.",
   category: "Development Tools",
   order: 1,
 };
 
-# Best Practices for Agentic Development
+# Agentic Development with Codex
 
-This guide covers how to effectively use AI-assisted development tools in your research workflow.
+A research-backed guide to using OpenAI Codex effectively for building production-quality web applications. Intended as an onboarding resource for students in the Presence Lab and a shareable reference for the broader community.
 
-## Getting Started
+This guide draws from official OpenAI documentation, academic research, practitioner experience, and documented production incidents. Where practices are still emerging or contested, that's noted explicitly.
 
-Agentic development tools like Claude Code, GitHub Copilot, and Cursor can accelerate your work — but they require a different mindset than traditional coding.
+---
 
-## Key Principles
+## What's in This Guide
 
-- **Be specific in your prompts.** Vague instructions produce vague code.
-- **Review everything.** AI-generated code can contain subtle bugs.
-- **Understand before you accept.** Never merge code you don't understand.
-- **Iterate.** Treat AI suggestions as a starting point, not a final answer.
+Each section is a standalone document you can read independently. They're ordered to build on each other, but feel free to jump to what's relevant.
 
-## Recommended Workflow
+### Getting Started
 
-1. Start with a clear plan of what you want to build
-2. Break the work into small, testable steps
-3. Use the AI tool to help with each step
-4. Review and test before moving to the next step
-5. Commit frequently with descriptive messages
+- [**Getting Started with Codex**](/docs/development-tools/agentic-dev-best-practices/getting-started-with-codex) — What Codex is, how to access it, cloud vs CLI, and your first task
+
+### Core Workflows
+
+- [**Setting Up AGENTS.md**](/docs/development-tools/agentic-dev-best-practices/setting-up-agents-md) — Writing effective configuration files that shape how Codex works in your project
+- [**Context Management & Task Decomposition**](/docs/development-tools/agentic-dev-best-practices/context-management) — How to break work into right-sized tasks and manage context limits
+- [**Test-Driven Development with Codex**](/docs/development-tools/agentic-dev-best-practices/test-driven-development) — Why <Def>TDD</Def> is the single most effective discipline for agent code quality
+- [**Git Workflows**](/docs/development-tools/agentic-dev-best-practices/git-workflows) — Branching, <Def>PR</Def>s, <Def>conventional commits</Def>, and parallel development
+- [**Planning & Architecture**](/docs/development-tools/agentic-dev-best-practices/planning-and-architecture) — Plan-then-execute patterns, spec files, and knowing when to delegate
+
+### Quality & Safety
+
+- [**Security Practices**](/docs/development-tools/agentic-dev-best-practices/security-practices) — Vulnerability rates, secrets management, database security, and sandboxing
+- [**Code Quality & Refactoring**](/docs/development-tools/agentic-dev-best-practices/code-quality) — TypeScript as guardrail, ESLint enforcement, and what agents can/can't refactor
+- [**CI/CD for Agent-Generated Code**](/docs/development-tools/agentic-dev-best-practices/ci-cd-for-agent-code) — The five-layer quality gate, migration safety, and agent-specific failure patterns
+
+### Advanced Topics
+
+- [**MCP Servers & Tool Integration**](/docs/development-tools/agentic-dev-best-practices/mcp-servers) — Connecting Codex to external tools via the Model Context Protocol
+- [**Common Pitfalls & Failure Modes**](/docs/development-tools/agentic-dev-best-practices/common-pitfalls) — What goes wrong, documented incidents, and beginner vs experienced patterns
+
+### Context
+
+- [**Learning Effectively with AI Tools**](/docs/development-tools/agentic-dev-best-practices/learning-effectively) — Research on skill development, balancing fundamentals, and avoiding over-reliance
+
+---
+
+## Key Takeaways
+
+If you only remember a few things from this guide:
+
+1. **Write tests first.** Codex was trained to iterate until tests pass. Without tests, it judges its own work — and it's a generous grader.
+2. **One task per session.** Codex's cloud <Def>sandbox</Def> model rewards focused, discrete tasks. Start fresh rather than accumulating context.
+3. **AGENTS.md is your lever.** A lean, specific configuration file is the primary way to shape Codex's behavior.
+4. **Review everything.** Over 40% of AI-generated code contains security flaws. The agent proposes; you decide.
+5. **Plan before you prompt.** Write a spec, break it into tasks, then hand each task to Codex. "Prompt to ship" is the fastest way to get into trouble.
+
+<Callout type="note">
+This guide reflects the state of agentic development tools as of early-to-mid 2026. The field is moving fast — practices that are "emerging" today may be well-established (or abandoned) within months.
+</Callout>

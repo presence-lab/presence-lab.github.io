@@ -1,0 +1,161 @@
+export const metadata = {
+  title: "Planning & Architecture with Codex",
+  description: "Plan-then-execute workflows, writing specification files, architecture decision records, and knowing when to delegate.",
+  category: "Development Tools",
+  order: 9,
+};
+
+# Planning & Architecture with Codex
+
+The most common failure mode with coding agents is not bad code generation — it is skipping the planning step entirely. This section covers how to structure work so that Codex produces useful output on the first attempt, how to capture architectural decisions so agents respect them, and how to decide what to delegate versus what to keep human.
+
+<Callout type="warning">
+**The fastest way to get into trouble with agents is to collapse the loop into "prompt to ship."** Typing a vague request and merging whatever comes back is not a workflow — it is gambling. The right loop is Plan, Generate, Review, Test, Iterate. Every step you skip increases the probability that you ship a subtle bug or an architectural mistake that compounds over time.
+</Callout>
+
+---
+
+## The Plan-Then-Execute Workflow
+
+Codex works best when you separate thinking from doing. Here is the step-by-step workflow:
+
+### Step 1: Plan in Chat or a Separate Document
+
+Before creating a Codex task, write down what you want. This can be a conversation with a chatbot, a document in your repo, or even notes on paper. The goal is to articulate:
+
+- **What** you want to build or change
+- **Why** it matters (the problem it solves)
+- **Constraints** (performance requirements, compatibility, existing patterns to follow)
+- **Which files** will be created or modified
+- **Acceptance criteria** (how you will know it is done)
+
+This planning step takes five to fifteen minutes. It saves hours of back-and-forth with the agent and prevents the "it did something, but not what I wanted" outcome.
+
+### Step 2: Write a Specification File
+
+Commit the plan to your repository as a specification file so Codex can read it directly. Store specs in a dedicated directory like `docs/specs/`.
+
+<Callout type="tip">
+**Commit spec files to your repository.** When a specification lives in the repo, Codex reads it automatically as part of the codebase. This is more reliable than pasting requirements into the prompt, which can be truncated or misinterpreted. The spec also serves as documentation for future contributors who want to understand why a feature exists.
+</Callout>
+
+Here is a template for specification files:
+
+```markdown
+# Feature: [Name]
+
+## Goal
+[One sentence describing what this feature accomplishes]
+
+## Requirements
+- [ ] Requirement 1
+- [ ] Requirement 2
+
+## Files to Create/Modify
+- Create: src/components/NewComponent.tsx
+- Modify: src/app/page.tsx
+
+## Acceptance Criteria
+- [ ] All existing tests pass
+- [ ] New tests cover the requirements
+- [ ] No TypeScript errors
+
+## Out of Scope
+- [Things explicitly NOT to do]
+```
+
+The "Out of Scope" section is particularly important for agents. Without it, Codex may "helpfully" refactor adjacent code, add features you did not ask for, or restructure files in ways that create merge conflicts with other work in progress.
+
+### Step 3: Create a Focused Codex Task
+
+Reference the spec file directly in your Codex prompt:
+
+> "Implement the feature described in `docs/specs/feature-x.md`, ensuring all existing tests pass. Do not modify any files not listed in the spec."
+
+This gives Codex a clear, bounded task with explicit success criteria. The constraint about not modifying unlisted files prevents the scope creep that agents are prone to.
+
+### Step 4: Review and Iterate
+
+Review the <Def>PR</Def> that Codex produces against your spec's acceptance criteria. If adjustments are needed, create a follow-up task that references both the original spec and the specific issues found in review. Avoid vague follow-ups like "fix the issues" — be specific about what needs to change and why.
+
+---
+
+## Architecture Decision Records
+
+Architecture Decision Records (ADRs) document the reasoning behind significant technical choices. They have been a software engineering best practice for years, but they take on new importance with coding agents because agents have no institutional memory.
+
+Every Codex session starts fresh. Without ADRs, an agent might make a decision that contradicts one your team made months ago — choosing a different state management library, restructuring the database schema in a way you deliberately avoided, or introducing a pattern you explicitly rejected.
+
+### The Agent Decision Record (AgDR) Standard
+
+The emerging Agent Decision Record (AgDR) standard extends traditional ADRs with agent-specific fields. Store these in `docs/adr/` and reference the directory in your AGENTS.md so that every Codex session reads them:
+
+```markdown
+<!-- AGENTS.md -->
+Read all files in docs/adr/ before making architectural decisions.
+Do not contradict any decision marked as "Accepted."
+```
+
+A typical ADR includes:
+
+- **Title** — A short descriptive name (e.g., "Use Zod for runtime validation")
+- **Status** — Proposed, Accepted, Deprecated, Superseded
+- **Context** — The situation and constraints that led to the decision
+- **Decision** — What was decided and why
+- **Consequences** — Known tradeoffs, both positive and negative
+
+The key benefit is that ADRs make implicit knowledge explicit. When a senior developer says "we tried that approach last year and it didn't scale," that knowledge usually lives only in their head. An ADR captures it in a form that both future team members and coding agents can access.
+
+---
+
+## Human vs. Agent Decision Boundaries
+
+Not every task is appropriate for delegation to an agent. Here is a practical framework for deciding what to delegate, what to delegate with oversight, and what to keep human.
+
+### Fully Delegate to Agents
+
+These tasks have clear inputs, verifiable outputs, and low cost of failure:
+
+- Mechanical implementation with clear specifications
+- Boilerplate code (<Def>CRUD</Def> endpoints, form components, data models)
+- Test generation from existing implementations
+- Documentation from existing code
+- Repetitive tasks (renaming across files, updating imports, formatting)
+
+### Delegate with Checkpoints
+
+These tasks benefit from agent speed but need human review at defined points:
+
+- Shared interfaces (review the interface before implementing consumers)
+- Merge-conflict-prone work (coordinate with other branches first)
+- Data migrations (review the migration plan before execution)
+- Medium-to-large features (break into phases, review after each)
+
+### Keep Human
+
+These tasks require judgment, context, or accountability that agents cannot provide:
+
+- Architectural decisions (database schema design, service boundaries, technology selection)
+- Product intent (what to build, what to prioritize, what to cut)
+- Long-term maintenance considerations (will this be maintainable in two years?)
+- Security-critical code (authentication, authorization, encryption, PII handling)
+- Tasks outside your verification capability (if you cannot tell whether the output is correct, you should not delegate it)
+
+### Heuristics for the Decision
+
+When you are unsure whether to delegate, ask four questions:
+
+1. **Is the goal verifiable?** Can you write a test, run a type check, or otherwise confirm correctness without reading every line? If not, keep it human.
+2. **Is the input well-defined?** Does the agent have everything it needs, or will it have to make assumptions? Assumptions are where agents go wrong.
+3. **Is the cost of failure acceptable?** A broken unit test is cheap to fix. A corrupted production database is not.
+4. **Does it require judgment only a human has?** Understanding user needs, organizational politics, long-term strategy, and ethical implications are human responsibilities.
+
+---
+
+## The Supervision Paradox
+
+There is an uncomfortable finding in the research on AI-assisted development: **experienced developers take 19% longer to complete tasks when using AI tools**, despite expecting speed gains. This is not because the tools are slow — it is because experienced developers spend more time verifying, correcting, and rethinking AI output than they would have spent writing the code themselves.
+
+This creates a paradox. The expertise needed to effectively supervise AI output is the same expertise that makes a developer productive without AI. And over-reliance on AI tools risks eroding that expertise over time, because you practice less when you delegate more.
+
+The practical implication for students: do not skip the learning phase. Write code by hand until you understand it deeply. Use agents to amplify your productivity after you have built the judgment to evaluate their output. If you cannot review agent-generated code and spot the subtle bugs, you are not ready to delegate that type of work.

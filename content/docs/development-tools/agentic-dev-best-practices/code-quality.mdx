@@ -1,0 +1,175 @@
+export const metadata = {
+  title: "Code Quality & Refactoring with Agents",
+  description: "TypeScript as guardrail, ESLint enforcement, what agents can and can't refactor, and mutation testing.",
+  category: "Development Tools",
+  order: 8,
+};
+
+# Code Quality & Refactoring with Agents
+
+Agent-generated code is only as reliable as the guardrails around it. This section covers the tools and practices that keep agent output production-worthy: strict type checking, <Def>linting</Def> enforcement, understanding what agents actually refactor well (and poorly), and verifying test quality with <Def>mutation testing</Def>.
+
+---
+
+## TypeScript Strict Mode as the Primary Guardrail
+
+According to the GitHub 2025 Octoverse report, <Def>TypeScript</Def> is now the most popular language on GitHub, with AI coding agents cited as a significant growth driver. This is not a coincidence. TypeScript's type system catches entire categories of errors at compile time — errors that agents produce frequently and that are difficult to catch in code review.
+
+Here is the recommended `tsconfig.json` configuration for agent-assisted projects:
+
+```json
+{
+  "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}
+```
+
+Why each setting matters for agent code:
+
+- **`strict: true`** — Enables the full suite of strict checks (`strictNullChecks`, `strictFunctionTypes`, `noImplicitAny`, etc.). Agents frequently produce code with implicit `any` types and unchecked null values. This flag catches those at compile time rather than at runtime in production.
+- **`noUncheckedIndexedAccess`** — When accessing array elements or object properties by index, TypeScript treats the result as `T | undefined` rather than assuming it exists. Agents routinely access `array[0]` or `obj[key]` without null checks. This flag forces explicit handling.
+- **`noImplicitReturns`** — Ensures every code path in a function returns a value. Agents sometimes generate functions with missing return statements in conditional branches, leading to silent `undefined` values.
+- **`noFallthroughCasesInSwitch`** — Prevents accidental fallthrough in switch statements. Agents generate switch statements frequently and sometimes omit `break` or `return`.
+- **`forceConsistentCasingInFileNames`** — Prevents import errors that occur when an agent references `Component.tsx` as `component.tsx`. These bugs are invisible on case-insensitive file systems (Windows, macOS) but break Linux <Def>CI</Def>.
+
+### Additional TypeScript Practices
+
+**Use `unknown` instead of `any`.** When an agent encounters a value whose type it cannot determine, it defaults to `any`. Train yourself to replace `any` with `unknown`, which forces explicit type narrowing before use. Add this to your AGENTS.md: "Never use the `any` type. Use `unknown` and narrow with type guards."
+
+**Use <Def>Zod</Def> for runtime validation.** TypeScript types disappear at runtime, so data from external sources (API responses, form inputs, environment variables) needs runtime validation. Zod is the recommended approach — both Anthropic and OpenAI reference it in their agent documentation. Define a schema once and get both the TypeScript type and the runtime validator:
+
+```typescript
+import { z } from "zod";
+
+const UserSchema = z.object({
+  id: z.string().uuid(),
+  email: z.string().email(),
+  role: z.enum(["admin", "member", "viewer"]),
+});
+
+type User = z.infer<typeof UserSchema>;
+```
+
+**Use explicit function return types.** Agents infer return types automatically, which means the return type changes silently whenever the function body changes. Declaring the return type explicitly turns unintended changes into compile errors:
+
+```typescript
+// Bad — return type changes silently if implementation changes
+function getUser(id: string) {
+  return db.users.find(id);
+}
+
+// Good — compiler catches unintended return type changes
+function getUser(id: string): Promise<User | null> {
+  return db.users.find(id);
+}
+```
+
+---
+
+## ESLint as Enforcement
+
+Documentation, comments, and AGENTS.md instructions are all advisory. An agent can choose to follow them or ignore them. Linting errors in your CI pipeline are different — they are a hard gate that blocks merging.
+
+<Callout type="tip">
+**ESLint is the one guardrail agents cannot circumvent.** AI can choose to ignore documentation, but it cannot ignore linting errors in your CI pipeline. If your ESLint config forbids `console.log`, no agent-generated PR with a stray log statement will pass. Make your code standards executable, not aspirational.
+</Callout>
+
+Here is a concrete <Def>ESLint</Def> configuration designed for agent-generated code:
+
+```javascript
+// eslint.config.js (flat config)
+export default [
+  {
+    rules: {
+      // Prevent debug statements from reaching production
+      "no-console": "warn",
+
+      // Functions with many parameters are hard for agents to call correctly
+      "max-params": ["error", 2],
+
+      // Short functions are easier for agents (and humans) to understand
+      "max-lines-per-function": ["warn", { max: 50 }],
+
+      // Small files reduce <Def>context window</Def> waste
+      "max-lines": ["warn", { max: 250 }],
+
+      // Magic numbers obscure intent — agents produce them frequently
+      "no-magic-numbers": [
+        "warn",
+        { ignore: [0, 1, -1], ignoreArrayIndexes: true },
+      ],
+    },
+  },
+];
+```
+
+Why these rules matter for agent code specifically:
+
+- **`max-params: 2`** — Agents struggle with functions that take many positional parameters. Limiting to two forces the use of options objects, which are self-documenting and order-independent.
+- **`max-lines-per-function: 50`** — Agents generate long functions that do too many things. Short functions are easier to test, review, and replace.
+- **`max-lines: 250`** — Agents tend to put everything in one file. Small files mean smaller diffs and easier review.
+- **`no-magic-numbers`** — Agents embed numeric values directly (`if (retries > 3)` instead of `if (retries > MAX_RETRIES)`). Named constants make intent clear.
+
+For purpose-built tooling, look at **eslint-config-agent** and **AgentLint**, which provide rule sets specifically designed for AI-generated code patterns.
+
+---
+
+## What Agents Are Good at Refactoring
+
+Research from the Nara Institute of Science and Technology analyzed 15,451 refactoring operations to understand what AI agents actually do when refactoring. The findings are instructive.
+
+Agents excel at **low-level, mechanical refactoring**:
+
+- **Rename variable/method** — 30.7% of agent refactoring operations. Agents are excellent at consistent renaming across a codebase.
+- **Type changes** — Updating type signatures, converting between types, adding generic parameters.
+- **Consistency tasks** — Formatting, import ordering, applying coding conventions uniformly.
+- **Extract method/function** — Pulling repeated code into shared functions when the pattern is clear.
+
+Overall, **52.5% of agent refactorings target maintainability** — making code easier to read, understand, and modify. This is where agents add the most value: the tedious, repetitive cleanup work that humans defer indefinitely.
+
+---
+
+## What Agents Are Bad at Refactoring
+
+The same research reveals a significant gap in **high-level architectural refactoring**. Only **43% of agent refactoring operations** are architectural, compared to **54.9% for human developers**.
+
+Agents struggle with:
+
+- **System-wide understanding** — Agents work within a context window. They cannot hold an entire system's architecture in mind the way an experienced developer can.
+- **Major API changes** — Changing a public interface requires understanding every consumer. Agents miss downstream impacts outside their visible context.
+- **Design pattern migrations** — Moving from one architectural pattern to another (e.g., switching from REST to GraphQL, or from a monolith to microservices) requires judgment about tradeoffs that agents lack.
+- **Cross-cutting concerns** — Changes that touch authentication, logging, error handling, or caching across many modules require coordination that agents handle poorly.
+
+The practical takeaway: use agents for mechanical refactoring within well-defined boundaries. Keep architectural refactoring as a human-led activity where agents execute specific, well-scoped subtasks.
+
+---
+
+## The "Opportunistic Tangling" Anti-Pattern
+
+<Callout type="note">
+**Watch for opportunistic tangling.** Agents frequently refactor code while implementing features — renaming variables, reorganizing imports, reformatting files — all mixed into the same commit as the feature work. This creates a hidden review burden because reviewers must separate intentional changes from cosmetic ones. The fix is simple: add this to your AGENTS.md: "Submit refactoring changes in separate commits from feature work."
+</Callout>
+
+When you review a PR from an agent and see a 400-line diff for what should have been a 50-line feature, opportunistic tangling is usually the cause. The agent "improved" surrounding code while it was there, making the actual feature change nearly impossible to isolate during review.
+
+This is not a minor annoyance. It undermines the entire review process. If you cannot tell which changes are intentional feature work and which are drive-by refactoring, you cannot meaningfully review either one.
+
+---
+
+## Mutation Testing as a Safety Net
+
+High code coverage does not mean high test quality. A real-world case study illustrates this clearly: an AI-generated service layer had **92% code coverage** across **140 tests**, yet contained a **critical deduplication bug** that none of the tests caught. The tests verified that the code ran without errors, but did not verify that the code produced correct results.
+
+Mutation testing addresses this gap. A mutation testing tool (such as Stryker for JavaScript/TypeScript) makes small changes to your source code — replacing `>` with `>=`, flipping boolean conditions, removing function calls — and checks whether your tests catch the change. If a mutation survives (tests still pass), your tests have a blind spot.
+
+Recommended mutation scores:
+
+- **80%+ for AI-generated code** — The baseline target. Below this, your test suite has significant gaps that agent-generated bugs will slip through.
+- **90%+ for critical domains** — Payment processing, authentication, data integrity, and any code where a subtle bug has outsized consequences.
+
+Mutation testing is computationally expensive, so run it on changed files in CI rather than the entire codebase. The investment pays for itself the first time it catches a bug that line coverage missed.

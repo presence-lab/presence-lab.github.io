@@ -7,6 +7,7 @@ import { useState } from "react";
 interface DocLink {
   title: string;
   slug: string[];
+  children?: DocLink[];
 }
 
 interface SidebarCategory {
@@ -77,7 +78,9 @@ function SidebarSection({
   pathname: string;
 }) {
   const hasActive = category.docs.some(
-    (doc) => pathname === `/docs/${doc.slug.join("/")}`
+    (doc) =>
+      pathname === `/docs/${doc.slug.join("/")}` ||
+      doc.children?.some((c) => pathname === `/docs/${c.slug.join("/")}`)
   );
   const [open, setOpen] = useState(hasActive);
 
@@ -104,27 +107,57 @@ function SidebarSection({
       </button>
       {open && (
         <ul className="space-y-0.5">
-          {category.docs.map((doc) => {
-            const href = `/docs/${doc.slug.join("/")}`;
-            const isActive = pathname === href;
-            return (
-              <li key={href}>
-                <Link
-                  href={href}
-                  aria-current={isActive ? "page" : undefined}
-                  className={`block font-body text-sm py-1.5 px-3 rounded-md transition-colors ${
-                    isActive
-                      ? "text-charcoal font-medium bg-clemson-orange/10 border-l-2 border-clemson-orange"
-                      : "text-slate hover:text-charcoal hover:bg-cream-dark"
-                  }`}
-                >
-                  {doc.title}
-                </Link>
-              </li>
-            );
-          })}
+          {category.docs.map((doc) => (
+            <SidebarDocItem key={doc.slug.join("/")} doc={doc} pathname={pathname} />
+          ))}
         </ul>
       )}
     </div>
+  );
+}
+
+function SidebarDocItem({
+  doc,
+  pathname,
+  nested = false,
+}: {
+  doc: DocLink;
+  pathname: string;
+  nested?: boolean;
+}) {
+  const href = `/docs/${doc.slug.join("/")}`;
+  const isActive = pathname === href;
+  const hasChildren = doc.children && doc.children.length > 0;
+  const childActive = hasChildren && doc.children!.some((c) => pathname === `/docs/${c.slug.join("/")}`);
+  const showChildren = isActive || childActive;
+
+  return (
+    <li>
+      <Link
+        href={href}
+        aria-current={isActive ? "page" : undefined}
+        className={`block font-body text-sm py-1.5 rounded-md transition-colors ${
+          nested ? "pl-6 pr-3" : "px-3"
+        } ${
+          isActive
+            ? "text-charcoal font-medium bg-clemson-orange/10 border-l-2 border-clemson-orange"
+            : "text-slate hover:text-charcoal hover:bg-cream-dark"
+        }`}
+      >
+        {doc.title}
+      </Link>
+      {hasChildren && showChildren && (
+        <ul className="space-y-0.5 mt-0.5">
+          {doc.children!.map((child) => (
+            <SidebarDocItem
+              key={child.slug.join("/")}
+              doc={child}
+              pathname={pathname}
+              nested
+            />
+          ))}
+        </ul>
+      )}
+    </li>
   );
 }

@@ -45,8 +45,8 @@ export default async function DocsPage() {
                 {category.name}
               </h2>
               <p className="font-body text-sm text-slate">
-                {category.docs.length}{" "}
-                {category.docs.length === 1 ? "guide" : "guides"}
+                {category.docs.reduce((n, d) => n + 1 + (d.children?.length ?? 0), 0)}{" "}
+                guides
               </p>
               <ul className="mt-3 space-y-1">
                 {category.docs.map((doc) => (
@@ -55,6 +55,9 @@ export default async function DocsPage() {
                     className="font-body text-sm text-charcoal-light"
                   >
                     {doc.title}
+                    {doc.children && doc.children.length > 0 && (
+                      <span className="text-slate"> ({doc.children.length} sub-guides)</span>
+                    )}
                   </li>
                 ))}
               </ul>

@@ -1,0 +1,143 @@
+export const metadata = {
+  title: "Learning Effectively with AI Tools",
+  description: "Research on skill development with AI, balancing fundamentals, avoiding over-reliance, and building lasting expertise.",
+  category: "Development Tools",
+  order: 13,
+};
+
+# Learning Effectively with AI Tools
+
+AI coding tools are everywhere. A 2025 survey found 92% of UK undergraduates use generative AI for coursework, up from 66% in 2024. The question is no longer whether you will use these tools — it is whether you will use them in ways that build lasting expertise or quietly erode it.
+
+This page summarizes what the research says so far and offers concrete strategies for getting the benefits without the costs.
+
+---
+
+## What the Research Shows
+
+The headline finding across multiple studies is consistent: **how** you use AI matters far more than **whether** you use it.
+
+### Anthropic's Controlled Experiment (2025-2026)
+
+Anthropic ran a randomized controlled trial with 52 professional software engineers. Participants who used AI assistants scored **17% lower on code comprehension assessments** compared to those who worked without AI — a gap equivalent to nearly two letter grades.
+
+<Callout type="warning">
+Engineers in the AI group scored 17% lower on comprehension — nearly two letter grades — despite completing tasks faster. Speed is not the same as learning.
+</Callout>
+
+But the averages obscure an important pattern. When researchers looked at individual behaviors:
+
+- **Low-scoring participants** delegated entire tasks to AI, used AI to iteratively debug without understanding the underlying problem, and rarely engaged with the code beyond copy-paste.
+- **High-scoring participants** used a generation-then-comprehension pattern: they let AI produce a draft, then studied the output carefully, asked conceptual questions about why it worked, and modified it themselves.
+
+<Callout type="tip">
+The **generation-then-comprehension** pattern consistently separates learners who build skill from those who stall. Let AI generate a draft, then read every line, ask yourself why each decision was made, and modify the result by hand before moving on.
+</Callout>
+
+### INSEAD/Wharton Chess Study
+
+Researchers at INSEAD and Wharton studied AI-assisted chess training. Players given **on-demand AI advice** (available whenever they wanted it) improved by only 30%, while those under a **system-regulated model** (AI advice delivered at structured intervals) improved by 64%.
+
+Perhaps most striking: students in the on-demand group were aware they were becoming over-reliant on the AI, yet continued to use it the same way. Awareness alone did not change behavior — the system design had to enforce better habits.
+
+### University of Maribor Programming Study
+
+A study at the University of Maribor examined how different uses of <Def>LLM</Def>s correlated with student programming grades:
+
+- Using LLMs for **code generation and debugging** showed a **negative correlation** with course grades.
+- Using LLMs for **explanations and understanding** showed **no harmful effect** on grades.
+
+The pattern is the same across all three studies: delegation hurts, comprehension helps.
+
+---
+
+## Practical Implications for Your Work
+
+These findings translate into concrete habits you can adopt today.
+
+### Use AI After You Understand the Design
+
+Before opening Codex or any AI tool, sketch the architecture yourself. Identify the components, data flow, and edge cases. Use AI to accelerate implementation of a design you already understand — not to generate a design you have not thought through.
+
+### Ask AI to Explain, Not Just Generate
+
+When AI produces code you did not expect, do not just accept it. Ask follow-up questions: "Why did you use a ref here instead of state?" or "What happens if this promise rejects?" Treat the AI as a tutor, not a vending machine.
+
+### Review Every Line
+
+Before committing AI-generated code, read it line by line. If you cannot explain what a line does and why it is there, you do not understand it well enough to ship it. This is the single most important habit for learning from AI output.
+
+### Resist Delegating Debugging Entirely
+
+Debugging is one of the highest-value learning activities in programming. When something breaks, spend time understanding the failure before handing it to AI. Use AI to confirm your hypothesis or suggest areas to investigate — not to skip the diagnostic process entirely.
+
+### Practice Generation-Then-Comprehension
+
+1. Describe the task to the AI and let it produce a solution.
+2. Read the entire output without running it.
+3. Identify at least one thing you did not expect or do not fully understand.
+4. Ask the AI to explain that specific part.
+5. Modify the solution yourself before accepting it.
+
+---
+
+## The Shifting Landscape of Fundamentals
+
+AI tools are changing which skills matter most, not eliminating the need for skill.
+
+### New Core Skills
+
+With AI handling more routine code generation, the premium shifts toward:
+
+- **Debugging AI output** — understanding why generated code fails and fixing it efficiently
+- **Code review** — reading code critically, spotting subtle bugs, identifying security issues
+- **Spec writing** — describing what you want precisely enough that an AI (or a human) can build it
+- **Testing** — writing tests that verify behavior, not just coverage numbers
+- **Architecture and system design** — understanding how components fit together at scale
+
+### Reduced Emphasis
+
+Exact syntax memorization matters less when AI can produce syntactically correct code reliably. This does not mean syntax is irrelevant — you need enough fluency to read and modify code — but rote memorization of <Def>API</Def> signatures is no longer the bottleneck it once was.
+
+---
+
+## Prerequisites for Effective Agent Use
+
+Before you can productively use agentic coding tools like Codex, you need a baseline of skills that let you evaluate and direct the agent's work.
+
+- **Programming literacy** — You can read code in your project's language and understand control flow, data structures, and common patterns.
+- **Debugging** — You can use a debugger, read stack traces, and form hypotheses about failures.
+- **Git** — You understand branches, commits, diffs, and merge conflicts well enough to review what an agent produces.
+- **Testing** — You can write a test that meaningfully verifies behavior, not just one that passes.
+- **Problem decomposition** — You can break a vague requirement into concrete, scoped tasks.
+- **Critical evaluation** — You can look at generated code and identify when something is wrong, inefficient, or insecure.
+- **LLM basics** — You understand that LLMs are probabilistic, can hallucinate, have context limits, and do not "know" things the way a database does.
+
+If any of these feel weak, strengthen them before relying heavily on agent workflows. The agent amplifies your abilities — including your gaps.
+
+---
+
+## The Supervision Paradox
+
+There is a circular problem at the heart of AI-assisted development: **you need expertise to verify AI output, but over-reliance on AI erodes the expertise you need to verify it.**
+
+This is not a theoretical concern. The Anthropic study showed it happening with professional engineers, not just students. The INSEAD chess study showed that people recognized the problem and still could not self-correct.
+
+The implication is that you cannot rely on willpower alone. You need structural safeguards:
+
+- Regularly write code without AI to maintain your fundamentals.
+- Use AI in a generation-then-comprehension pattern rather than pure delegation.
+- Work on projects where you understand the domain well enough to catch errors.
+- Treat AI-generated code with the same skepticism you would apply to a Stack Overflow answer from an anonymous user.
+
+---
+
+## Resources
+
+There are few established curricula for learning to work with agentic coding tools. The field is moving fast and most university programs have not caught up. Here is what exists as of early 2026:
+
+- **MIT Missing Semester** — Their lecture on AI tools frames the relationship well: think of yourself as "the manager of an intern." You set direction, review work, and maintain quality standards. The intern is fast but needs supervision.
+- **CodePath Applied AI Engineering** — A structured program focused on practical AI tool use in software development contexts.
+- **agenticoding.ai** — A 13-lesson open course covering agentic development workflows, from basic prompting through multi-agent architectures.
+
+No major university has yet published a full syllabus specifically for agentic coding tool use in a software engineering curriculum. If you find one, share it with the lab.

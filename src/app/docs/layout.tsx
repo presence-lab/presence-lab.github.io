@@ -13,6 +13,10 @@ export default async function DocsLayout({
     docs: cat.docs.map((doc) => ({
       title: doc.title,
       slug: doc.slug,
+      children: doc.children?.map((child) => ({
+        title: child.title,
+        slug: child.slug,
+      })),
     })),
   }));
 

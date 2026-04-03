@@ -1,0 +1,183 @@
+export const metadata = {
+  title: "CI/CD for Agent-Generated Code",
+  description: "The five-layer quality gate, agent-specific failure patterns, database migration safety, and GitHub Actions configuration.",
+  category: "Development Tools",
+  order: 10,
+};
+
+# CI/CD for Agent-Generated Code
+
+When a human writes code, code review is your primary quality gate. When an agent writes code, automated <Def term="CI/CD">CI/CD</Def> becomes the primary gate — because agents produce code faster than any team can review it manually. This section covers how to build a CI pipeline specifically designed for agent-generated pull requests, the failure patterns unique to AI code, and hard-won lessons about database safety.
+
+---
+
+## The Five-Layer Quality Gate
+
+Autonoma (March 2026) formalized this layered approach for agent-generated <Def>PR</Def>s. Each layer catches a different class of defect, and they are ordered by execution time so that fast checks fail first.
+
+### Layer 1: Linting and Formatting (~1 min, required)
+
+<Def>ESLint</Def> and <Def>Prettier</Def> catch style violations, unused variables, banned patterns, and formatting inconsistencies. This is the cheapest check and should run first. Configure `--max-warnings 0` so that warnings are treated as errors — agents will produce "just one warning" in every PR if you let them.
+
+### Layer 2: Type Checking (~2 min, required)
+
+<Callout type="tip">
+**TypeScript type checking is arguably the most valuable CI layer for agent-generated code.** It catches null reference errors, incorrect function signatures, missing return values, and type mismatches — all of which are common in agent output. A clean `tsc --noEmit` run with strict mode enabled eliminates more bugs per minute of CI time than any other check.
+</Callout>
+
+Run `tsc --noEmit` with `strict: true` enabled. This catches errors that would otherwise surface as runtime crashes in production. Type checking is especially valuable because agents frequently change function signatures without updating all callers.
+
+### Layer 3: Security Scanning (~3 min, required)
+
+Run automated security checks to catch vulnerabilities that agents introduce:
+
+- **<Def>Semgrep</Def>** — Static analysis for security anti-patterns (SQL injection, <Def>XSS</Def>, insecure crypto)
+- **<Def>Gitleaks</Def>** — Scans for accidentally committed secrets (API keys, tokens, passwords)
+- **npm audit** — Checks dependencies for known vulnerabilities
+
+Agents are particularly prone to introducing security issues because they optimize for "does it work?" rather than "is it secure?" Missing authentication checks, overly permissive <Def>CORS</Def> headers, and hardcoded credentials all appear regularly in agent-generated code.
+
+### Layer 4: Test Coverage (~5 min, required)
+
+Run your test suite with coverage reporting. The goal is not 100% coverage — it is ensuring that agent-generated code is exercised by tests that verify correct behavior, not just execution. See the <Def>mutation testing</Def> section in the Code Quality guide for how to verify test quality beyond line coverage.
+
+### Layer 5: Agentic/E2E Testing (~10 min, recommended)
+
+End-to-end tests with <Def>Playwright</Def> verify that the application works as a user would experience it. These are slower and more expensive to maintain, but they catch integration issues that unit tests miss — broken navigation, rendering errors, failed API calls in context.
+
+---
+
+## GitHub Actions Workflow
+
+Here is a concrete workflow file that implements the five-layer gate:
+
+```yaml
+name: Agent PR Quality Gate
+on:
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+
+      # Layer 1: Lint
+      - name: Lint
+        run: npx eslint . --max-warnings 0
+
+      # Layer 2: Type check
+      - name: Type check
+        run: npx tsc --noEmit
+
+      # Layer 3: Security
+      - name: Security scan
+        run: npx audit-ci --moderate
+
+      # Layer 4: Tests
+      - name: Unit tests
+        run: npm test -- --coverage
+
+      # Layer 5: E2E (optional)
+      - name: E2E tests
+        run: npx playwright test
+```
+
+This runs sequentially so that fast checks fail first. If linting fails in one minute, you do not wait ten minutes for E2E tests to also fail. For larger projects, you can parallelize layers 1-3 into separate jobs that run concurrently, then gate layers 4-5 on their success.
+
+---
+
+## AI-Specific Failure Patterns
+
+Standard CI catches syntax errors and test failures. These patterns are specific to agent-generated code and require additional attention during review — or additional CI rules to catch automatically.
+
+### Pattern Drift
+
+The code works and passes tests, but it does not match your project's architecture. An agent might use a different state management approach, introduce a new data-fetching pattern, or organize files in a way that contradicts your conventions. Pattern drift is insidious because each individual PR looks fine in isolation, but the codebase gradually loses coherence.
+
+**Mitigation:** Document architectural patterns in <Def>ADR</Def>s. Add ESLint rules that enforce import boundaries (e.g., `eslint-plugin-boundaries`). Review agent PRs for structural consistency, not just correctness.
+
+### Dependency Inflation
+
+Agents add npm packages to solve problems that your existing dependencies already handle. Over time, this bloats `node_modules`, increases attack surface, and creates maintenance burden. A single agent session might add `lodash` for one utility function that could be a three-line helper.
+
+**Mitigation:** Add a CI check that flags new entries in `package.json`. Require human approval for dependency additions.
+
+### Test Tautology
+
+Tests verify what the code does, not what it should do. An agent writes an implementation, then writes tests that assert the implementation's behavior — including its bugs. The tests pass with 100% coverage, but they are testing that the bug works consistently, not that the feature works correctly.
+
+**Mitigation:** Write acceptance criteria before the agent writes code. Use mutation testing to verify test quality. Review test assertions critically — if every assertion looks like it was derived from the implementation rather than the requirements, the tests are tautological.
+
+### Security Defaults
+
+Agents choose the path of least resistance, which often means the least secure option. Missing authentication middleware on new endpoints, `Access-Control-Allow-Origin: *` in CORS configuration, unvalidated user input passed directly to database queries, and disabled CSRF protection all appear in agent-generated code.
+
+**Mitigation:** Security scanning in CI (Layer 3). Explicit security requirements in spec files. AGENTS.md rules like "All new API endpoints must use the `requireAuth` middleware."
+
+### Copy-Paste Remnants
+
+Agents learn from training data and sometimes leave behind artifacts from that data: placeholder values (`example.com`, `TODO: implement this`, `your-api-key-here`), hardcoded test data in production code, and comments referencing other projects.
+
+**Mitigation:** Grep-based CI checks for common placeholder patterns (`example.com`, `TODO`, `FIXME`, `xxx`, `placeholder`). These are cheap to run and catch embarrassing oversights.
+
+---
+
+## Database Migration Safety
+
+<Callout type="warning">
+**In February 2026, a well-documented incident occurred where a coding agent executed `drizzle-kit push --force` against a production database, wiping months of data.** The agent was given a task that involved schema changes, and it ran the most direct command available — which happened to be destructive. The database had no recent backup that could be restored quickly. This is not a hypothetical risk.
+</Callout>
+
+Database migrations are the highest-stakes operation an agent can perform, because the consequences of a mistake are often irreversible. Here are the critical safeguards:
+
+### Always Test Locally First
+
+Run migrations against a local or staging database before touching production. This sounds obvious, but agents skip this step by default — they execute the fastest path to "task complete."
+
+### Use CI/CD for Production — Never Manual Commands
+
+Production migrations should only run through your CI/CD pipeline, triggered by a merge to the production branch. Never give an agent (or a human) direct access to run migration commands against production. The pipeline should include:
+
+1. Generate the migration file
+2. Review the SQL it will execute
+3. Run against staging
+4. Require manual approval before production
+
+### Wrap Destructive Changes in Transactions
+
+Any migration that drops columns, tables, or modifies data should be wrapped in a transaction so it can be rolled back if something goes wrong. Not all databases support transactional DDL (MySQL does not for most schema changes), so know your database's capabilities.
+
+### Generate Rollback Scripts
+
+For every migration, generate a corresponding rollback script that reverses the change. Review the rollback script before running the migration forward. An agent can generate the forward migration but should not be trusted to generate a correct rollback without human review.
+
+### AGENTS.md Rule
+
+Add this to your project's AGENTS.md:
+
+```
+Never run migration commands against production.
+Always create migration files, never push directly.
+Do not use --force flags on any database command.
+```
+
+---
+
+## Automated PR Review with GitHub Actions
+
+### OpenAI Codex Action
+
+OpenAI provides `codex-action@v1` for automated PR review directly in GitHub Actions. It reads the PR diff, analyzes the changes, and posts review comments. This adds an AI review layer on top of your automated checks — useful for catching logical issues that linting and type checking miss.
+
+### Third-Party Options
+
+- **CodeRabbit** — Automated code review that posts inline comments on PRs. Supports custom review instructions and learns from your feedback over time.
+- **Qodo PR-Agent** — Open-source PR review tool that generates descriptions, reviews code, and suggests improvements. Can be self-hosted for teams with privacy requirements.
+
+These tools complement your CI pipeline — they do not replace it. Automated review catches issues that pattern-match against known problems, but it cannot verify business logic or architectural intent. Human review remains necessary for anything beyond mechanical correctness.

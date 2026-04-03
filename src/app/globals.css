@@ -348,6 +348,47 @@ html {
   color: var(--charcoal-light);
 }
 
+/* ── Glossary tooltips ── */
+.def-wrapper {
+  position: relative;
+  display: inline;
+}
+.def-term {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: var(--clemson-purple);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 2px;
+  cursor: help;
+}
+.def-tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 320px;
+  padding: 0.5rem 0.75rem;
+  background: var(--charcoal);
+  color: var(--cream);
+  font-family: var(--font-outfit);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  border-radius: 6px;
+  z-index: 50;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.def-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--charcoal);
+}
+
 /* ── Reduced motion preference ── */
 @media (prefers-reduced-motion: reduce) {
   .animate-on-scroll {

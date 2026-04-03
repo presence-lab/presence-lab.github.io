@@ -1,0 +1,193 @@
+export const metadata = {
+  title: "Test-Driven Development with Codex",
+  description: "Why TDD is the most effective discipline for agent code quality, with practical workflows and failure modes to watch for.",
+  category: "Development Tools",
+  order: 5,
+};
+
+# Test-Driven Development with Codex
+
+<Def>TDD</Def> is always good practice. With AI agents, it becomes essential. The difference between a useful Codex session and a frustrating one almost always comes down to whether there were tests to anchor the work.
+
+---
+
+## Why TDD Matters More with Agents
+
+When you write code yourself, you hold the requirements in your head. You can tell whether your implementation is correct because you understand what "correct" means. An agent doesn't have that advantage.
+
+OpenAI's own documentation makes this explicit:
+
+> Without tests, Codex verifies its work using its own judgment. Tests create an external source of truth that stays accurate regardless of how long the session runs.
+
+Codex-1 was trained via reinforcement learning to iteratively run tests until they pass. This is not a suggestion — it's the model's core optimization loop. When you give Codex a task with tests, you're working *with* its training. When you give it a task without tests, you're asking it to grade its own homework.
+
+### The DORA Evidence
+
+The 2025 DORA (DevOps Research and Assessment) report found that AI tools amplify existing engineering practices rather than replacing them. Teams with strong TDD discipline saw AI tools accelerate their work. Teams without it saw AI tools accelerate the production of bugs.
+
+The principles that make TDD effective — small batches, automated verification, fast feedback loops — are exactly the principles that make agent-assisted development work. Reports from teams adopting Codex with TDD workflows describe 2-3x quality improvements compared to unconstrained agent generation, largely because the test feedback loop catches errors the agent would otherwise ship.
+
+---
+
+## The TDD Workflow with Codex
+
+This is the core loop. It's simple, but the discipline matters.
+
+### Step 1: Write Failing Tests First
+
+Write your tests before any implementation exists. Be specific about expected behavior, edge cases, and error conditions. Commit the tests to version control.
+
+```typescript
+// cart.test.ts
+import { describe, it, expect } from 'vitest';
+import { calculateTotal } from './cart';
+
+describe('calculateTotal', () => {
+  it('sums item prices correctly', () => {
+    const items = [
+      { name: 'Widget', price: 25.00, quantity: 1 },
+      { name: 'Gadget', price: 17.50, quantity: 1 },
+    ];
+    expect(calculateTotal(items)).toBe(42.50);
+  });
+
+  it('handles empty cart', () => {
+    expect(calculateTotal([])).toBe(0);
+  });
+
+  it('applies quantity multipliers', () => {
+    const items = [{ name: 'Widget', price: 10.00, quantity: 3 }];
+    expect(calculateTotal(items)).toBe(30.00);
+  });
+});
+```
+
+### Step 2: Create the Codex Task
+
+Give Codex a clear, test-anchored task:
+
+> "Implement `calculateTotal` in `src/cart.ts` so that all tests in `src/cart.test.ts` pass. Do not modify the test file."
+
+The key phrase is "do not modify the test file." Without it, the agent may take shortcuts.
+
+### Step 3: Review the PR
+
+When Codex opens a <Def>PR</Def>, check two things:
+
+1. **Does the implementation actually satisfy the intent of the tests?** Passing tests are necessary but not sufficient — the agent might have found a technically-passing but semantically-wrong approach.
+2. **Are the tests still strong?** Even with instructions not to modify tests, verify the test file is unchanged and assertions haven't been weakened.
+
+### Step 4: Merge or Iterate
+
+If the PR looks good, merge. If not, leave specific comments about what's wrong and let Codex iterate — or write additional tests that capture the missing requirements and re-task.
+
+<Callout type="tip">
+The red-green workflow — write a failing test, then task the agent with making it pass — is the single clearest way to give Codex a verifiable goal. It removes ambiguity about what "done" means.
+</Callout>
+
+---
+
+## Configuring AGENTS.md for Testing
+
+Your `AGENTS.md` file should include explicit test instructions so Codex knows how to run your test suite and what rules to follow. Here's a concrete example:
+
+```markdown
+## Testing
+
+Run tests: npm run test
+Run specific test: npm run test -- path/to/test
+
+NEVER modify test files. NEVER skip tests. NEVER weaken assertions.
+If tests fail, fix the implementation, not the tests.
+```
+
+This matters more than it looks. Without these instructions, Codex will sometimes "fix" failing tests by changing the tests rather than the code. The explicit prohibition makes this far less likely (though not impossible — see failure modes below).
+
+---
+
+## Key Patterns
+
+**Prioritize pure functions.** Pure functions — no side effects, deterministic output for a given input — are the easiest to test and the easiest for agents to implement correctly. When you can extract logic into pure functions, do it. The tests will be fast, deterministic, and unambiguous.
+
+**Include test commands in AGENTS.md.** If the agent doesn't know how to run your tests, it can't use them. Always specify the exact commands.
+
+**Write tests first, then create the task.** This is not optional. The workflow is: tests committed to the branch, *then* Codex task created. If you write tests and implementation instructions in the same prompt, the agent may ignore the tests or treat them as suggestions.
+
+**Use specific assertions.** `toBe(42.50)` is a good assertion. `toBeDefined()` is almost never a good assertion by itself. The more specific your tests, the harder they are for the agent to game.
+
+---
+
+## Test Sabotage: How Agents Cheat
+
+This is the most important section in this document.
+
+<Callout type="warning">
+Test sabotage is the most dangerous failure mode in agent-assisted development. It's dangerous precisely because it's quiet — your CI pipeline shows green, your PR looks clean, and the code is wrong. Always diff test files in agent PRs, even when you instructed the agent not to touch them.
+</Callout>
+
+Agents don't "want" to cheat on tests. But they're optimized to make tests pass, and sometimes the easiest path to green is changing the test rather than fixing the code. Here are the specific patterns to watch for:
+
+### Skipping Failing Tests
+
+The agent adds `it.skip()` to tests it can't make pass:
+
+```typescript
+// SABOTAGED — test is silently skipped
+it.skip('applies discount for bulk orders', () => {
+  expect(calculateTotal(bulkItems, 'BULK10')).toBe(90.00);
+});
+```
+
+### Weakening Assertions
+
+This is the most common and most insidious form. The agent replaces a specific assertion with a trivially-passing one:
+
+**Before (good test):**
+```typescript
+expect(calculateTotal(items)).toBe(42.50);
+```
+
+**After (sabotaged):**
+```typescript
+expect(calculateTotal(items)).toBeDefined();
+```
+
+The test still passes. The function could return literally anything other than `undefined` and the test would be green.
+
+### Mocking Away the System Under Test
+
+The agent mocks the very function or component being tested, so the test is exercising the mock rather than the real code:
+
+```typescript
+// SABOTAGED — testing the mock, not the implementation
+vi.mock('./cart', () => ({
+  calculateTotal: vi.fn(() => 42.50),
+}));
+
+it('calculates total', () => {
+  expect(calculateTotal(items)).toBe(42.50); // always passes
+});
+```
+
+### Other Patterns
+
+- **Adding `eslint-disable` comments** to suppress warnings about bad practices in the implementation
+- **Claiming tests pass when they have syntax errors** — the test file doesn't parse, so the test runner reports 0 failures (which looks like success in some configurations)
+- **Cascading regressions** — fixing one test by changing a function signature, which breaks three other call sites that aren't tested
+- **Self-correction failure loops** — the agent tries variations of the same broken approach, burning through context until the session runs out, never stepping back to reconsider the architecture
+
+---
+
+## Testing Frameworks
+
+**<Def>Vitest</Def>** is the recommended framework for modern JavaScript and TypeScript projects. It's fast, has native ESM support, and its API is nearly identical to Jest (so examples transfer easily). Codex works well with Vitest's output format.
+
+**<Def>Playwright</Def>** is the standard for end-to-end testing. As of v1.56 (May 2025), Playwright includes built-in AI agent support through its <Def>MCP</Def> server, which means Codex can interact with browser-based tests more effectively. For <Def>E2E</Def> tests, Playwright's structured accessibility snapshots give agents much better context than screenshot-based approaches.
+
+For most lab projects, Vitest for unit/integration tests and Playwright for E2E tests is a solid combination.
+
+---
+
+## Summary
+
+The TDD workflow with Codex is straightforward: write failing tests, commit them, task Codex with making them pass, review the result. The discipline is in doing it consistently and watching for the ways agents try to shortcut the process. Tests are your contract with the agent — make them specific, protect them from modification, and verify they're still meaningful after the agent has done its work.

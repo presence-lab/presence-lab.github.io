@@ -1,0 +1,152 @@
+export const metadata = {
+  title: "MCP Servers & Tool Integration",
+  description: "Connecting Codex to external tools via the Model Context Protocol — configuration, useful servers, and security considerations.",
+  category: "Development Tools",
+  order: 11,
+};
+
+# MCP Servers & Tool Integration
+
+Large language models are powerful reasoners, but they cannot natively query a database, trigger a deployment, or read a live error log. The **Model Context Protocol (MCP)** solves this by giving LLMs a standardized way to call external tools. Think of it as a USB-C port for AI — one protocol, many devices.
+
+---
+
+## What Is MCP?
+
+MCP was introduced by Anthropic in November 2024 as an open standard for connecting LLMs to external tools and data sources. Within eighteen months it became the industry standard: as of early 2026, the community maintains over 11,180 servers on PulseMCP and 19,421 on mcp.so, with 547+ clients supporting the protocol.
+
+At its core, MCP defines a JSON-RPC-based communication layer between a **host** (the LLM-powered application you are using) and a **server** (a process that exposes tools, resources, or prompts). The host discovers what tools a server offers, and the <Def>LLM</Def> decides when to call them based on your conversation.
+
+### Who Supports MCP?
+
+MCP is not limited to a single vendor. The following clients all support MCP server connections:
+
+- **OpenAI Codex** (cloud and <Def>CLI</Def>)
+- **Claude Code**
+- **Cursor** and **Windsurf**
+- **VS Code** (via Copilot Chat) and **JetBrains <Def>IDE</Def>s**
+- **Gemini CLI**
+
+This means configuration knowledge transfers across tools. If you learn to set up an MCP server for Codex, the same server works in Claude Code or Cursor with minimal changes.
+
+---
+
+## Configuring MCP Servers in Codex
+
+Codex reads MCP server configuration from `~/.codex/config.toml`. Two transport types are supported: **streamable HTTP** (for remote servers) and **stdio** (for local processes).
+
+### Streamable HTTP (Remote Servers)
+
+Most managed MCP servers expose a URL endpoint. Point Codex at it:
+
+```toml
+[mcp.servers.supabase]
+type = "url"
+url = "https://mcp.supabase.com/mcp"
+```
+
+When Codex starts, it connects to the URL, discovers available tools, and makes them callable during your session. Authentication is handled per-server — <Def>Supabase</Def> uses <Def>OAuth</Def> 2.1, others may use <Def>API</Def> keys passed as query parameters or headers.
+
+### Stdio (Local Processes)
+
+Some servers run as local processes that communicate over stdin/stdout:
+
+```toml
+[mcp.servers.github]
+type = "stdio"
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-github"]
+
+[mcp.servers.github.env]
+GITHUB_PERSONAL_ACCESS_TOKEN = "ghp_..."
+```
+
+Codex spawns the process, sends JSON-RPC messages over stdio, and tears it down when the session ends.
+
+### Codex as an MCP Server
+
+Codex itself can act as an MCP server for other clients:
+
+```bash
+codex --as-mcp-server
+```
+
+This lets you embed Codex's capabilities inside another MCP-aware tool — useful for building multi-agent pipelines where one agent delegates coding tasks to Codex.
+
+---
+
+## Useful MCP Servers
+
+The ecosystem is large, but four servers are particularly relevant to the kind of full-stack work you will do in this lab.
+
+### Supabase MCP
+
+Connects Codex directly to your Supabase project. Tools include querying tables, inspecting schema, managing auth users, and reading Edge Function logs.
+
+<Callout type="tip">
+**Use Supabase MCP in development only.** It connects to a live database, so a misunderstood prompt could modify or delete real data. Always configure it against your development project, never production. Supabase supports a read-only mode — enable it unless you specifically need write access.
+</Callout>
+
+Authentication uses OAuth 2.1: Codex opens a browser window, you authorize the connection, and a scoped token is stored locally. No API keys to manage.
+
+### Vercel MCP
+
+Provides tools for managing deployments, environment variables, DNS records, and project settings. Install it via the <Def>Vercel</Def> CLI:
+
+```bash
+vercel mcp
+```
+
+This command outputs the TOML configuration block you need. Useful when you want Codex to check deployment status, read build logs, or update environment variables without leaving your terminal.
+
+### Sentry MCP
+
+Exposes 16+ tools for error tracking: search issues, retrieve stack traces, query event frequency, resolve or assign issues. Particularly valuable during debugging sessions — instead of switching to the <Def>Sentry</Def> dashboard, you can ask Codex to pull the latest errors for your project and reason about them in context.
+
+### GitHub MCP
+
+The most popular MCP server in the ecosystem (20,200+ stars). Provides tools for repository management, pull requests, issues, code search, and file operations. If you are using Codex for PR reviews or issue triage, this server lets it interact with GitHub directly rather than through shell commands.
+
+---
+
+## MCP Security
+
+<Callout type="warning">
+**MCP significantly expands the attack surface of your development environment.** Every MCP server you enable is a bridge between an LLM (which processes untrusted input) and a real system (which has real consequences). Treat MCP configuration with the same seriousness as SSH keys or cloud credentials.
+</Callout>
+
+MCP is powerful precisely because it gives LLMs the ability to take actions — and that is also what makes it dangerous. The security landscape is still maturing, and real incidents have already occurred.
+
+### Known Attack Vectors
+
+**Prompt injection via tools.** A malicious or compromised data source can embed instructions in tool responses that manipulate the LLM's behavior. For example, a GitHub issue body could contain hidden text that instructs the model to exfiltrate environment variables.
+
+**Tool poisoning.** An MCP server can advertise a tool with a benign-looking name and description but include hidden instructions in its metadata that the LLM follows. The user sees "search_database" but the tool's internal description tells the model to also send query results to an external endpoint.
+
+**Rug pull attacks.** A server that behaves normally during initial setup but changes its tool definitions in later sessions. Because MCP servers can update their tool list dynamically, a previously safe server could start requesting dangerous permissions.
+
+**Supply chain attacks.** CVE-2025-6514 demonstrated this at scale — a vulnerability in a popular MCP server package affected 437,000+ development environments. Like npm packages, MCP servers are code you run locally, and they inherit all the supply chain risks of their dependencies.
+
+### Real-World Incidents
+
+These are not hypothetical — they have happened:
+
+- **WhatsApp MCP exfiltration**: A proof-of-concept demonstrated that a malicious MCP server could read WhatsApp message history and exfiltrate it to an attacker-controlled endpoint, with the user seeing only a benign-looking "message search" tool.
+- **Smithery path traversal**: A vulnerability in the Smithery MCP registry allowed attackers to escape <Def>sandbox</Def>ed file access and read arbitrary files on the host system.
+- **GitHub prompt injection**: Researchers showed that specially crafted GitHub issue content could manipulate an LLM connected via the GitHub MCP server into performing unintended repository actions.
+
+### Best Practices
+
+1. **Human-in-the-loop.** Always review tool calls before they execute. Codex shows you what it wants to do — read the tool name and arguments before approving. Never run MCP-connected sessions in fully autonomous mode against production systems.
+2. **Read-only mode.** When a server offers it (Supabase does), enable read-only mode. You lose write capability but eliminate an entire class of accidental damage.
+3. **Scope your tokens.** If a server requires an API key or personal access token, create one with the minimum permissions needed. A GitHub token for code search does not need `repo:delete` scope.
+4. **Use vetted servers only.** Stick to first-party servers (Supabase, Vercel, Sentry, GitHub official) or well-known community servers with significant adoption. Avoid installing random MCP servers from unknown authors — they run code on your machine.
+5. **Audit your config.** Periodically review `~/.codex/config.toml` and remove servers you are not actively using. Every configured server is an active attack surface.
+
+---
+
+## Summary
+
+MCP turns Codex from a code-generation tool into an integrated development agent that can query databases, manage deployments, triage errors, and interact with GitHub — all without leaving your terminal. The protocol is standardized, widely adopted, and genuinely useful.
+
+But every server you connect is a trust decision. Start with one or two first-party servers configured in read-only mode, keep human-in-the-loop approval enabled, and expand from there as you build confidence in the workflow. The security landscape is evolving rapidly, and healthy skepticism is the right default.
