@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAllDocs, getDocSlugs } from "@/lib/docs";
 import DocsNavigation from "@/components/DocsNavigation";
@@ -65,9 +66,9 @@ export default async function DocPage({
           aria-label="Breadcrumb"
           className="font-body text-xs text-slate mb-6"
         >
-          <a href="/docs" className="hover:text-charcoal transition-colors">
+          <Link href="/docs" className="hover:text-charcoal transition-colors">
             Docs
-          </a>
+          </Link>
           <span className="mx-1.5" aria-hidden="true">
             &rsaquo;
           </span>
