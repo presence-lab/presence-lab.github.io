@@ -227,6 +227,127 @@ html {
   padding-bottom: 1rem;
 }
 
+/* ── Doc content typography ── */
+.doc-content h1 {
+  font-family: var(--font-cormorant);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--charcoal);
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+.doc-content h2 {
+  font-family: var(--font-cormorant);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--charcoal);
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+.doc-content h3 {
+  font-family: var(--font-cormorant);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--charcoal);
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+}
+.doc-content p {
+  font-family: var(--font-outfit);
+  font-size: 1rem;
+  color: var(--charcoal-light);
+  line-height: 1.75;
+  margin-bottom: 1rem;
+}
+.doc-content ul, .doc-content ol {
+  font-family: var(--font-outfit);
+  font-size: 1rem;
+  color: var(--charcoal-light);
+  line-height: 1.75;
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+.doc-content li {
+  margin-bottom: 0.25rem;
+}
+.doc-content ul li {
+  list-style-type: disc;
+}
+.doc-content ol li {
+  list-style-type: decimal;
+}
+.doc-content strong {
+  font-weight: 600;
+  color: var(--charcoal);
+}
+.doc-content a {
+  color: var(--clemson-purple);
+  text-decoration: underline;
+  text-decoration-color: var(--clemson-purple);
+  text-underline-offset: 2px;
+  transition: color 0.2s ease;
+}
+.doc-content a:hover {
+  color: var(--clemson-purple-light);
+}
+.doc-content code {
+  font-size: 0.875em;
+  background: var(--cream-dark);
+  padding: 0.15em 0.35em;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+.doc-content pre {
+  background: var(--charcoal);
+  color: var(--cream);
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+.doc-content pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  color: inherit;
+}
+.doc-content blockquote {
+  border-left: 3px solid var(--clemson-orange);
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  color: var(--charcoal-light);
+  font-style: italic;
+}
+.doc-content hr {
+  border: none;
+  height: 1px;
+  background: var(--card-border);
+  margin: 2rem 0;
+}
+.doc-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+  font-family: var(--font-outfit);
+  font-size: 0.9rem;
+}
+.doc-content th {
+  text-align: left;
+  font-weight: 600;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 2px solid var(--card-border);
+  color: var(--charcoal);
+}
+.doc-content td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--card-border);
+  color: var(--charcoal-light);
+}
+
 /* ── Reduced motion preference ── */
 @media (prefers-reduced-motion: reduce) {
   .animate-on-scroll {
