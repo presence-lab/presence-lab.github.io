@@ -56,6 +56,11 @@ const glossary: Record<string, string> = {
   "parameterized queries": "Database queries where user input is passed as parameters rather than concatenated into the query string, preventing SQL injection attacks.",
   containerized: "Running inside a container — a lightweight, isolated environment with its own filesystem and network, separate from the host system.",
   compaction: "The process of summarizing earlier parts of a conversation to free up context window space while preserving key information.",
+  inference: "Running input through an AI model to get output — each time you send a prompt and receive a response, that's one inference step.",
+  sampling: "The process of generating output from an AI model's probability distribution — the model doesn't return one fixed answer, it picks from likely continuations.",
+  "agent harness": "The software wrapper around an AI model that calls the model in a loop, dispatches tool requests, feeds results back, and manages the conversation. Also called scaffolding.",
+  "vibe coding": "Building software entirely through natural language conversation with a coding agent, without writing code yourself. Useful for prototyping; risky for production.",
+  "sub-agent": "A child agent spawned by a parent agent to handle a subtask in its own isolated context window, keeping the parent's context clean.",
 };
 
 export default glossary;
