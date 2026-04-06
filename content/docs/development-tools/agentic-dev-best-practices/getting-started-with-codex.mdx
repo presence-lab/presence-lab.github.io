@@ -1,6 +1,6 @@
 export const metadata = {
   title: "Getting Started with Codex",
-  description: "What Codex is, how to access it, cloud vs CLI modes, and running your first task.",
+  description: "What Codex is, how to access it, cloud vs CLI modes, managing costs, and running your first task.",
   category: "Development Tools",
   order: 2,
 };
@@ -86,9 +86,35 @@ Codex uses specialized model variants optimized for code generation:
 | GPT-5.1-Codex-Max | Multi-window <Def>compaction</Def> | Long-running tasks (24+ hours) with large codebases |
 | GPT-5.4-mini | Smaller context | Lighter tasks, faster turnaround, lower cost |
 
-The 400K token <Def>context window</Def> is large — roughly equivalent to a medium-sized codebase. But as we cover in the [Context Management](/docs/development-tools/context-management) guide, context quality degrades well before you hit the limit.
+The 400K token <Def>context window</Def> is large — roughly equivalent to a medium-sized codebase. But as we cover in the [Context Management](/docs/development-tools/agentic-dev-best-practices/context-management) guide, context quality degrades well before you hit the limit.
 
 GPT-5.1-Codex-Max uses a technique called multi-window compaction: when context exceeds the window, it summarizes earlier portions and continues, allowing it to sustain coherence across very long tasks. This is useful for large refactors but is not a substitute for good task decomposition.
+
+---
+
+## Managing Costs
+
+Coding agents cost money. Each inference step processes your full context, so costs scale with both the number of tool calls and the size of your conversation. Understanding and monitoring costs is a practical skill.
+
+### Clemson's ChatGPT Edu Access
+
+Clemson's institutional ChatGPT Edu subscription includes Codex access with usage limits that reset periodically. This is the most practical starting point for lab work — no personal payment required.
+
+To check your remaining usage in Codex Cloud:
+
+1. Open Codex in the ChatGPT interface
+2. Look for the **Rate Limits Remaining** menu (typically in the session header or settings panel)
+3. This shows your remaining message allowance and when it resets
+
+If you hit rate limits frequently, you are likely sending tasks that are too broad. Revisit [Context Management](/docs/development-tools/agentic-dev-best-practices/context-management) and break work into smaller pieces — this both improves output quality and reduces token consumption.
+
+### Model Selection as a Cost Lever
+
+Not every task needs the most capable model. Use larger models (GPT-5.2/5.3-Codex) for tasks that require reasoning across many files or complex logic. Use smaller models (GPT-5.4-mini) for straightforward changes like renaming, simple refactors, or generating boilerplate. Smaller models are faster and consume fewer tokens per inference step.
+
+### Cost Intuition
+
+As a rough mental model: a simple task (read a file, make one edit, run a test) might cost a few cents. A complex task involving 20+ tool calls across a large codebase might cost $0.50-$2.00. If you are on the Edu subscription, this maps to usage quota rather than dollars, but the same principle applies — simpler tasks consume less of your allocation.
 
 ---
 
@@ -118,6 +144,50 @@ Notice the specificity: exact file paths, clear behavior, styling approach, and 
 **Use the one-task-per-session pattern.** Each Codex Cloud task runs in a fresh sandbox, which means you get a clean context window every time. Rather than asking for multiple features in one session, start a new session for each discrete task. This avoids context degradation and makes each PR easier to review. Think of it like writing focused git commits — one logical change per unit of work.
 </Callout>
 
+<Callout type="tip">
+**You can interrupt and redirect.** If you see the agent heading in the wrong direction — reading irrelevant files, generating the wrong kind of code, or spending time on something you did not ask for — interrupt it (Ctrl+C in CLI, or send a follow-up message in Cloud) and redirect. It is cheaper and faster to course-correct early than to let the agent finish and then redo the work.
+</Callout>
+
+### Iterating on Results
+
+Coding agents support multi-turn conversations. After the agent completes a task, you can send follow-up messages in the same session to refine the result:
+
+- "Remove the type annotations from the helper functions"
+- "Actually, use a dialog instead of a dropdown for mobile"
+- "The error message is too technical — make it user-friendly"
+
+The agent retains context from the earlier work in the session, so follow-ups do not need to re-explain what was already done. This is useful when you do not have a precise spec upfront and want to iterate toward the right solution.
+
+For unrelated tasks, start a new session instead. Keeping unrelated work in the same session pollutes the context window with irrelevant information.
+
+---
+
+## Other Use Cases
+
+Beyond implementing features and fixing bugs, coding agents are useful for several tasks you might not immediately think of:
+
+### Agent as Shell
+
+You can use a coding agent as a natural-language shell. Instead of remembering exact command syntax and flags, describe what you want:
+
+> "Use ripgrep to find all Python files in this directory that have renaming imports (import ... as ...)"
+
+The agent generates and runs the correct command, including flags you might not remember. You can give follow-ups like "ignore the lib directory" or "show only filenames." This is especially useful for tools with complex flag syntax (ffmpeg, find, awk, git log formatting).
+
+### Code Review
+
+Ask the agent to review a diff, a file, or an entire pull request. You can be general ("review this code") or specific ("check this refactor for any cases where the before and after behavior differs"). Agents are surprisingly good at reasoning about code deltas and can catch subtle semantic differences in refactored code.
+
+### Codebase Exploration
+
+When joining a new project or contributing to open source, agents can navigate and explain unfamiliar code. "Explain the data flow from the API route to the database" or "what files would I need to modify to add a new endpoint?" are both effective prompts that save significant ramp-up time.
+
+### <Def>Vibe Coding</Def>
+
+<Def>Vibe coding</Def> is building software entirely through natural language conversation — describing what you want without writing any code yourself. It works well for prototyping, creative exploration, and front-end design. The "make it look retro" example from the MIT Missing Semester lecture is a small instance of this pattern.
+
+Vibe coding is effective for low-stakes work where you can evaluate the result visually or through tests. It is risky for production code where subtle correctness matters, because you have less understanding of what the agent produced. The practices in this guide — especially test-driven development and code review — exist in part to make vibe-coded output safe to ship.
+
 ---
 
 ## What Makes a Good Task
@@ -131,4 +201,4 @@ Good Codex tasks share a few characteristics:
 
 Bad tasks are vague ("make the UI better"), unbounded ("add authentication and user profiles and settings"), or assume knowledge Codex does not have about your project's conventions (unless you wrote it in AGENTS.md).
 
-The next section, [Setting Up AGENTS.md](/docs/development-tools/setting-up-agents-md), covers how to give Codex the project knowledge it needs to work effectively.
+The next section, [How Coding Agents Work](/docs/development-tools/agentic-dev-best-practices/how-agents-work), covers what happens under the hood when you use a coding agent — and what happens to your data.
