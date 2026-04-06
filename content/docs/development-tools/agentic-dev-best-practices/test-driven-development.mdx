@@ -188,6 +188,108 @@ For most lab projects, Vitest for unit/integration tests and Playwright for E2E 
 
 ---
 
+## E2E Testing with Playwright
+
+Unit tests verify that individual functions work correctly. <Def>E2E</Def> tests verify that the application works as a user would experience it — clicking buttons, filling forms, navigating between pages. For agent-generated code that touches UI, E2E tests catch integration issues that unit tests miss entirely: broken navigation, rendering errors, failed API calls in context, and visual regressions.
+
+### Two Approaches
+
+There are two ways to use Playwright with coding agents, and they serve different purposes:
+
+**1. Agent writes Playwright test files (TDD pattern).** You write (or have the agent write) `.spec.ts` test files that Codex runs as part of its feedback loop. This follows the same TDD workflow described above — write failing E2E tests, task the agent with making them pass. The tests live in your repo and run in CI.
+
+```typescript
+// login.spec.ts
+import { test, expect } from '@playwright/test';
+
+test('user can log in and see dashboard', async ({ page }) => {
+  await page.goto('/login');
+  await page.getByRole('textbox', { name: 'Email' }).fill('test@example.com');
+  await page.getByRole('textbox', { name: 'Password' }).fill('password123');
+  await page.getByRole('button', { name: 'Sign In' }).click();
+  await expect(page).toHaveURL('/dashboard');
+  await expect(page.getByRole('heading', { name: 'Welcome' })).toBeVisible();
+});
+```
+
+**2. Agent drives the browser directly via <Def>MCP</Def>.** The Playwright MCP server gives agents browser automation tools — navigate, click, fill, snapshot — that they can call during a session. This is useful for exploratory testing, debugging visual issues, or verifying behavior interactively. It does not produce persistent test files unless you ask the agent to convert its session into one.
+
+### The Playwright MCP Server
+
+The Playwright MCP server exposes browser automation as tools an agent can call. Instead of looking at screenshots (expensive, imprecise), the agent works with **accessibility snapshots** — structured text representations of the page:
+
+```
+- document [ref=e1]:
+  - heading "Welcome" [ref=e2]: Welcome to Example
+  - button "Sign In" [ref=e3]
+  - textbox "Email" [ref=e4]
+  - textbox "Password" [ref=e5]
+```
+
+This is far more useful to an LLM than a pixel image. The agent can identify elements by role and name, interact with them by reference, and verify page state — all without a vision model.
+
+To configure it in Codex CLI, add to your MCP config:
+
+```json
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest", "--headless", "--browser=chromium"]
+    }
+  }
+}
+```
+
+### The Playwright CLI
+
+For agents operating in a terminal (like Codex CLI or Claude Code), the Playwright CLI offers a token-efficient alternative to the full MCP server. Instead of loading the entire MCP tool schema into context, the agent calls simple shell commands:
+
+```bash
+playwright-cli open https://localhost:3000/login
+playwright-cli snapshot
+playwright-cli fill e4 "user@example.com"
+playwright-cli click e3
+```
+
+Each command generates the corresponding Playwright TypeScript code, making it straightforward to convert an exploratory CLI session into a persistent test file. Install it with `npm install -g @playwright/cli@latest`.
+
+### What Agents Are Good and Bad At
+
+**Good:**
+- Writing Playwright tests for well-defined user flows (login, form submission, navigation)
+- Using accessibility snapshots to verify page structure
+- Iterating on failing E2E tests the same way they iterate on unit tests
+- Converting exploratory browser sessions into test files
+
+**Bad:**
+- Visual/aesthetic judgments ("does this look right?") — accessibility snapshots don't capture visual design
+- Complex multi-step flows with conditional branching — agents lose track of state across many interactions
+- Tests involving timing-sensitive behavior (animations, debounced inputs) — agents tend to add brittle `waitForTimeout` calls instead of proper `waitFor` conditions
+- Flaky test diagnosis — when an E2E test passes locally but fails in CI, agents often add retries instead of finding the root cause
+
+### E2E Tests in AGENTS.md
+
+If your project uses Playwright, include the commands in AGENTS.md:
+
+```markdown
+## E2E Testing
+
+Run E2E tests: npx playwright test
+Run specific test: npx playwright test login.spec.ts
+Run with UI: npx playwright test --ui
+
+E2E tests live in tests/e2e/. Write them using page.getByRole()
+locators, not CSS selectors. Use web-first assertions
+(expect(locator).toBeVisible()) instead of manual waits.
+```
+
+<Callout type="tip">
+**Prefer `getByRole()` locators in Playwright tests.** They match how the accessibility snapshot represents elements, which means agents using the MCP server or CLI will produce tests consistent with what they "see." CSS selectors work but create a mismatch between how the agent perceives the page and how the test interacts with it.
+</Callout>
+
+---
+
 ## Summary
 
 The TDD workflow with Codex is straightforward: write failing tests, commit them, task Codex with making them pass, review the result. The discipline is in doing it consistently and watching for the ways agents try to shortcut the process. Tests are your contract with the agent — make them specific, protect them from modification, and verify they're still meaningful after the agent has done its work.
