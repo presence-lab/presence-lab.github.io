@@ -2,7 +2,7 @@ export const metadata = {
   title: "Context Management & Task Decomposition",
   description: "Understanding context window limits, breaking work into right-sized tasks, session handoff, and the one-task-per-session pattern.",
   category: "Development Tools",
-  order: 4,
+  order: 7,
 };
 
 # Context Management & Task Decomposition
@@ -33,6 +33,14 @@ Two research findings are particularly relevant:
 <Callout type="warning">
 **Practical context degradation heuristics.** These are approximate and model-dependent, but useful as mental anchors: at around 70% of the context window, precision starts declining measurably. At 85%, hallucination rates increase noticeably. Above 90%, behavior becomes erratic — the model may ignore instructions, contradict earlier output, or generate plausible-sounding nonsense. Do not treat these as hard thresholds. Treat them as a reason to keep sessions focused.
 </Callout>
+
+### Compaction: How Agents Handle Long Conversations
+
+When a conversation grows too long to fit in the context window, the agent harness uses <Def>compaction</Def> — it takes the earlier portion of the conversation history and uses the LLM itself to summarize it into a shorter version. That summary replaces the original messages in the context, freeing up space for new content.
+
+Think of it like compressing the beginning of a book into a synopsis so you can keep reading new chapters. The synopsis captures the main points but loses details. This is why agents can sometimes "forget" specific instructions from early in a conversation even when they seem to remember the general topic.
+
+Most agent harnesses trigger compaction automatically when the context fills up. Some also let you trigger it manually — in Codex CLI, for example, you can compact the context on demand when you notice the agent's performance degrading. If you are working on something new and unrelated, starting a fresh session is better than compacting, because compaction preserves a summary of irrelevant work that still takes up space.
 
 ---
 
@@ -154,6 +162,28 @@ Here is a template:
 ```
 
 Update this at the end of each working session. The next session (whether you or the agent) reads it and has immediate context on where things stand.
+
+---
+
+## Sub-Agents for Context Isolation
+
+Some agent harnesses support <Def>sub-agent</Def>s: the ability for a running agent to spawn a child agent that handles a subtask in its own separate context window. When the child finishes, it returns a summary to the parent. The parent's context is not polluted with the details of what the child did — only the result.
+
+### Why This Matters
+
+Consider a common operation: the agent needs to fetch documentation from a website. The raw HTML of a web page might be 50,000+ tokens of markup, navigation, analytics scripts, and other noise. If all of that gets appended to the parent agent's context, it wastes space and degrades focus.
+
+With a sub-agent, the parent says: "fetch this URL and summarize the API documentation for the `createUser` function." The sub-agent loads the page in its own context, extracts the relevant information, and returns a compact summary — maybe 500 tokens instead of 50,000. The parent continues with a clean context.
+
+### Parallel Sub-Agents
+
+Sub-agents can also run in parallel. If you have written separate sub-agents for code review and type checking, you can dispatch both at once after implementing a feature. They execute simultaneously in separate contexts, and the parent waits for both to finish before continuing.
+
+This is conceptually similar to running parallel Codex sessions with git worktrees (described in [Git Workflows](/docs/development-tools/agentic-dev-best-practices/git-workflows)), but at the tool level rather than the session level. Parallel sub-agents are useful for automated workflows; parallel sessions are useful for human-directed workflows.
+
+### Practical Availability
+
+Sub-agent support varies by tool. Claude Code has built-in sub-agent support. Codex CLI supports parallel tool calls but does not have a native sub-agent primitive — you can approximate the pattern by running multiple CLI sessions. The concept is worth understanding regardless of your current tool, because it explains how agents manage context behind the scenes and why some tools perform better than others on complex tasks.
 
 ---
 
