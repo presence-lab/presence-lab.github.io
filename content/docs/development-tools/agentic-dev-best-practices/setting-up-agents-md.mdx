@@ -2,7 +2,7 @@ export const metadata = {
   title: "Setting Up AGENTS.md",
   description: "Writing effective AGENTS.md configuration files — what to include, what to leave out, and a ready-to-use template.",
   category: "Development Tools",
-  order: 3,
+  order: 5,
 };
 
 # Setting Up AGENTS.md
@@ -66,6 +66,33 @@ The ETH Zurich finding bears repeating: more is not better. Omit:
 - **Vague instructions.** "Write clean code" and "follow best practices" waste tokens and provide no actionable guidance.
 - **Auto-generated content.** Do not ask an <Def>LLM</Def> to generate your AGENTS.md. Curate it yourself based on what actually matters in your project.
 - **Obvious things.** "Use TypeScript" in a TypeScript project adds nothing.
+
+---
+
+## Skills: Lazy-Loading Context
+
+As a project grows, you may find that your AGENTS.md needs to cover many topics — development practices, testing conventions, deployment procedures, documentation standards, security rules — and the file approaches the 32 KiB cap. When this happens, every session pays the cost of loading all that context, even when only a fraction of it is relevant to the current task.
+
+The solution is one level of indirection. Instead of putting everything in AGENTS.md, keep the file lean and point to separate reference documents that the agent loads on demand:
+
+```markdown
+## Reference Documents
+
+For detailed guidance on specific topics, read the relevant document:
+
+- **Testing conventions**: see `docs/testing-guide.md`
+- **API design patterns**: see `docs/api-patterns.md`
+- **Deployment procedures**: see `docs/deploy-guide.md`
+- **Security requirements**: see `docs/security-rules.md`
+```
+
+The agent reads AGENTS.md at the start of every session (small, fast, cheap). When it encounters a task related to testing, it reads `docs/testing-guide.md` into its context as a tool call. Tasks unrelated to testing never load that file, keeping the context window focused.
+
+Some agent harnesses formalize this pattern. Claude Code calls them "skills" — named reference documents that the agent can load when relevant. Codex does not have a built-in skill system, but the pattern works with any agent: keep AGENTS.md as an index and put detailed guidance in separate files that the agent reads when needed.
+
+<Callout type="tip">
+**Think of AGENTS.md as a table of contents, not an encyclopedia.** It should tell the agent what topics exist and where to find details, not contain all the details itself. This keeps every session's starting context small and lets the agent load only what it needs.
+</Callout>
 
 ---
 
