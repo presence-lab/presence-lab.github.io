@@ -1,0 +1,130 @@
+export const metadata = {
+  title: "How Coding Agents Work",
+  description: "The mental model you need — language models, the agent loop, tool calling, and what happens to your data.",
+  category: "Development Tools",
+  order: 3,
+};
+
+# How Coding Agents Work
+
+You do not need to understand the internals of AI models to use coding agents effectively. But a basic mental model of what is happening under the hood will help you understand why certain practices work, why agents fail in the ways they do, and why context management matters so much.
+
+This section covers just enough to be useful. For a deeper treatment, see the [MIT Missing Semester lecture on Agentic Coding](https://missing.csail.mit.edu), which this section draws from.
+
+---
+
+## Language Models in One Paragraph
+
+A large language model (<Def>LLM</Def>) is a probability distribution over text. Given an input string (your prompt), it produces a probability distribution over possible output strings (completions), and then <Def>sampling</Def> selects one. That is all it is — a conditional generative model that predicts what text is likely to come next. Everything else, including multi-turn chat, tool use, and coding agents, is built on top of this core primitive.
+
+The model has a fixed <Def>context window</Def>: a maximum length for the combined input and output. This is why conversations degrade over time and why you cannot simply dump an entire codebase into a prompt.
+
+---
+
+## Multi-Turn Conversation
+
+A single question-and-answer exchange is straightforward: your question is the input, the model's answer is the output. But how does a follow-up question work? The model has no memory between calls.
+
+The answer is concatenation. When you ask a follow-up, the entire conversation history — your first message, the model's first response, your second message — is assembled into one input string with turn markers, and the model generates the next response based on all of it.
+
+This means every message in a conversation makes the input longer. The model re-reads the entire history on every turn. This is why long conversations get expensive (more <Def>token</Def>s processed per turn) and why quality degrades as history grows (more information to attend to, with important details getting "lost in the middle").
+
+---
+
+## Tool Calling
+
+Conversational chat is useful, but coding agents need to do things — read files, write code, run tests. This is where tool calling comes in.
+
+The model is trained to produce a special kind of output: instead of just text for the user, it can emit a structured request to call a tool. For example, instead of saying "I would read the file dl.py," the model outputs something like:
+
+```
+[tool_call] read_file("dl.py")
+```
+
+This is still just text output from the probability distribution. But the software wrapping the model — the <Def>agent harness</Def> — recognizes this as a tool request rather than a message for the user. The harness intercepts the request, actually executes the file read on your machine, and then feeds the file contents back into the model as additional input.
+
+The model never touches your filesystem directly. It outputs text that says "I want to read this file," and the harness does the actual work.
+
+---
+
+## The Agent Loop
+
+This is the core mechanism that makes coding agents work. It is a loop:
+
+1. **You provide a prompt** — your task description, plus any context from AGENTS.md
+2. **The model runs <Def>inference</Def>** — it produces output, which might be text for you or a tool call
+3. **If it is a tool call**, the harness executes the tool (reads a file, runs a shell command, writes a diff) and feeds the result back as new input
+4. **The model runs inference again** with the updated input, and may call another tool
+5. **Steps 2-4 repeat** until the model produces a final text response, at which point control returns to you
+
+A single user prompt often triggers dozens of inference steps and tool calls under the hood. When you ask Codex to "fix this bug," what actually happens might be: read the failing test → run the test → read the source file → search for related code → edit the file → run the test again → check other tests → write a summary. Each arrow is a separate inference step with a tool call in between.
+
+<Callout type="note">
+**This loop is why agents are slow and why they cost money.** Each tool call requires a full round of inference, and each round processes the entire conversation history accumulated so far. A task that involves 15 tool calls means the model reads through the full context 15 times, each time with more data appended.
+</Callout>
+
+---
+
+## Putting It Together: A Concrete Example
+
+Here is what happens under the hood when you tell a coding agent "check that dl.py passes type checking with mypy":
+
+1. **Your prompt** enters the context: `"check that dl.py passes type checking with mypy"`
+2. **Inference step 1** — the model outputs a tool call: `read_file("dl.py")`
+3. **Harness** reads the file, appends its contents to the context
+4. **Inference step 2** — the model outputs a tool call: `bash("mypy dl.py")`
+5. **You approve** the command (or the harness auto-approves, depending on your configuration)
+6. **Harness** runs mypy, captures the output (`"Success: no issues found in 1 source file"`), appends it to context
+7. **Inference step 3** — the model outputs text: `"dl.py passes type checking with no issues."`
+8. **Control returns to you**
+
+Three inference steps, two tool calls, one user-visible response. The context grew from your one-line prompt to include the full file contents and the mypy output. This is a simple example — real tasks might involve 20-50 inference steps.
+
+---
+
+## What This Means in Practice
+
+Understanding the agent loop explains several things that otherwise seem arbitrary:
+
+**Why context degrades.** Every tool call appends more data to the context. After enough steps, the model is processing hundreds of thousands of tokens, and information from early in the conversation gets "lost in the middle." This is not a bug — it is a fundamental property of how attention works in these models. (See [Context Management](/docs/development-tools/agentic-dev-best-practices/context-management) for how to work around it.)
+
+**Why agents hallucinate.** The model is sampling from a probability distribution, not looking up facts in a database. When it generates a package name or API method, it is predicting what text is likely to come next in that position — not verifying that the package exists. Plausible-sounding but incorrect output is an inherent property of the technology.
+
+**Why costs scale with complexity.** Each inference step processes the full context. A 10-step task with a 50K token context does not cost 10x a single inference — it costs roughly 10 × 50K tokens of processing, plus whatever each tool call adds to the context for subsequent steps.
+
+**Why agents sometimes go off the rails.** The model is probabilistic. Most of the time it produces reasonable outputs, but it can sample poorly — calling tools that do not exist, writing incorrect code, or getting stuck in loops where it keeps trying the same failing approach. The agent harness does not "understand" what the model is doing; it just executes tool calls and feeds results back. If the model enters a bad loop, the harness will dutifully keep going.
+
+**Why you can interrupt and redirect.** When you press Ctrl+C or send a follow-up message, the harness stops the current loop and your new message becomes the latest input. The model re-reads the full context (including whatever it did before you interrupted) and can course-correct. This is a practical and important workflow — if you see the agent heading in the wrong direction, interrupt it early rather than waiting for it to finish.
+
+---
+
+## Privacy and Your Data
+
+Because higher-capacity models require substantial hardware, coding agents send your prompts and code to remote servers for <Def>inference</Def>. When you use a coding agent, the contents of files it reads, the commands it runs, and the code it writes all pass through the provider's infrastructure.
+
+What this means concretely:
+
+- **Your code is transmitted.** When the agent reads a file in your repository, that file's contents are sent to the model provider (OpenAI, Anthropic, etc.) as part of the inference request.
+- **Conversation history is stored.** Providers typically retain conversation data for some period — check the specific terms of service for details.
+- **Training policies vary.** Some providers may use your data to improve their models; others commit to not training on user data. These policies change and differ between tiers (free vs. paid, consumer vs. enterprise).
+
+### Clemson's ChatGPT Edu Subscription
+
+Clemson University provides access to ChatGPT through an institutional Edu subscription. Under OpenAI's Edu terms, **conversations are not used to train OpenAI's models**. This is a meaningful privacy advantage over consumer-tier access.
+
+However, your data is still transmitted to and processed on OpenAI's servers. For most coursework and lab projects, this is fine. For work involving unpublished research data, sensitive participant information, or proprietary datasets, consult with your PI before using cloud-based AI tools.
+
+<Callout type="tip">
+If you are working with sensitive data and need AI assistance, consider using the Codex CLI with a locally-hosted model. Local models are significantly less capable than hosted models like GPT-5, but they keep all data on your machine. This tradeoff — privacy for capability — is worth understanding even if you do not need it today.
+</Callout>
+
+### What to Check
+
+- **Terms of service**: Read the data usage section for your specific plan tier
+- **Training opt-out**: Verify whether your plan opts out of training by default or requires you to toggle a setting
+- **Data retention**: Understand how long the provider retains your conversation history
+- **Institutional agreements**: If using Clemson's Edu subscription, the institution has already negotiated terms — but know what those terms cover
+
+---
+
+Now that you understand what coding agents are and how they work, the next section — [Learning Effectively with AI Tools](/docs/development-tools/agentic-dev-best-practices/learning-effectively) — covers the research on how to use them without eroding the skills you need to supervise them.
